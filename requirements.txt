@@ -1,2 +1,7 @@
-numpy
 torch
+numba
+matplotlib
+pyyaml
+gym
+scipy
+pyglet
