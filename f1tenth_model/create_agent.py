@@ -1,9 +1,9 @@
-from f1tenth_drl.LearningAlgorithms.td3 import TestTD3, TrainTD3
-from f1tenth_drl.LearningAlgorithms.sac import TestSAC,TrainSAC
-from f1tenth_drl.LearningAlgorithms.ddpg import TestDDPG, TrainDDPG
-from f1tenth_drl.LearningAlgorithms.ppo import PPO
-from f1tenth_drl.LearningAlgorithms.dqn import DQN
-from f1tenth_drl.LearningAlgorithms.a2c import A2C
+from f1tenth_model.td3 import TestTD3, TrainTD3
+from f1tenth_model.sac import TestSAC,TrainSAC
+from f1tenth_model.ddpg import TestDDPG, TrainDDPG
+from f1tenth_model.ppo import PPO
+from f1tenth_model.dqn import DQN
+from f1tenth_model.a2c import A2C
 
 
 def create_train_agent(run_dict, state_dim):
