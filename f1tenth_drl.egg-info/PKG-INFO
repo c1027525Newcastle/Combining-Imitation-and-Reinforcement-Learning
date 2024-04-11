@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: f1tenth_drl
+Version: 0.0.1
+Summary: My F1Tenth drl agents
+Author: Benjamin Evans
+Author-email: <bdevans@sun.ac.za>
+Keywords: python,autonomous racing
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Linux
+
+DRL based f110 agents for autonomous racing

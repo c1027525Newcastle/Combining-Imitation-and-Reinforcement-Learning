@@ -15,19 +15,19 @@ n_test_laps: 20
 
 
 ## TEST 1
-#algorithm: "SAC"
-#id_name: "TAL"
-#map_name: "gbr"
-
-## TEST 2
-#algorithm: "SAC"
-#id_name: "Cth"
-#map_name: "gbr"
-
-## TEST 3
 algorithm: "TD3"
 id_name: "TAL"
 map_name: "gbr"
+
+## TEST 2
+algorithm: "SAC"
+id_name: "Cth"
+map_name: "gbr"
+
+## TEST 3
+# algorithm: "DDPG"
+# id_name: "TAL"
+# map_name: "gbr"
 
 ## TEST 4
 #random_seed: 10
