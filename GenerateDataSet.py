@@ -1,10 +1,11 @@
 import glob
-import numpy as np 
+import numpy as np
 from argparse import Namespace
 import numpy as np
 
+import os
 import sys
-sys.path.append('../')
+
 from f1tenth_gym import F110Env
 from f1tenth_gym import RaceCar
 from f1tenth_model.Utils.utils import *
