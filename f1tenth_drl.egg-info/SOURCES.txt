@@ -1,6 +1,5 @@
 README.md
 setup.py
-f1tenth_drl/GenerateDataSet.py
 f1tenth_drl/__init__.py
 f1tenth_drl/run_experiments.py
 f1tenth_drl.egg-info/PKG-INFO

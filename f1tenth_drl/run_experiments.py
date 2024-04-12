@@ -7,7 +7,6 @@ from f1tenth_drl.f1tenth_gym import F110Env
 from f1tenth_drl.Planners.AgentTrainer import AgentTrainer
 from f1tenth_drl.Planners.AgentTester import AgentTester
 from f1tenth_drl.Utils.utils import *
-from f1tenth_drl.Planners.PurePursuit import PurePursuit
 import torch
 
 
@@ -19,8 +18,6 @@ RENDER_ENV = False
 def  select_test_agent(conf, run_dict):
     if run_dict.planner_type == "AgentOff":
         planner = AgentTester(run_dict, conf)
-    elif run_dict.planner_type == "PurePursuit":
-        planner = PurePursuit(conf, run_dict, False)
     else:
         raise ValueError(f"Planner type not recognised: {run_dict.planner_type}")    
     
