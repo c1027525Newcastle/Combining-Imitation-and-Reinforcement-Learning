@@ -10,7 +10,6 @@ from f1tenth_drl.Utils.utils import *
 import torch
 
 
-
 RENDER_ENV = False
 # RENDER_ENV = True
 
