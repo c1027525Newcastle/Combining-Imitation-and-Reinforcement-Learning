@@ -1,6 +1,5 @@
 venv/
 Data/
-README.md/
 __pycache__/
 *.pyc
 *.pyo
