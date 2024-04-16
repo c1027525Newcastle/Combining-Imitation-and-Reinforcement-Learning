@@ -17,7 +17,7 @@ n_test_laps: 20
 ## TEST
 algorithm: "TD3"
 id_name: "Cth"
-map_name: "esp"
+map_name: "gbr"
 
 runs:
   - state_vector: "Game"

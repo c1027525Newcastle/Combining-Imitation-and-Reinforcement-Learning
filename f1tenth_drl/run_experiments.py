@@ -75,13 +75,22 @@ def run_training_batch(experiment):
         env = F110Env(map=run_dict.map_name, num_agents=1)
         planner = AgentTrainer(run_dict, conf)
         
-        print("Training")
-        run_simulation_loop_steps(env, planner, run_dict.training_steps, 4)
-        
-        print("Testing")
-        planner = AgentTester(run_dict, conf)
-        run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
-        env.__del__()
+        # Added a way to allow interrupting training early to ease testing of code
+        try:
+            print("Training")
+            run_simulation_loop_steps(env, planner, run_dict.training_steps, 4)
+            
+            print("Testing")
+            planner = AgentTester(run_dict, conf)
+            run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
+            env.__del__()
+
+        except KeyboardInterrupt:
+            print("Training interrupted")
+            print("Testing")
+            planner = AgentTester(run_dict, conf)
+            run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
+            env.__del__()
         
     
 def run_testing_batch(experiment, n_sim_steps=10):
