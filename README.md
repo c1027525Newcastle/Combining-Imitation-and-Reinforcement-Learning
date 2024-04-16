@@ -6,5 +6,9 @@ TODO:
 - SCHIMBA HARTA DE LA IL
 - Fa dataset of PP and then get rid of PP
 - When run_experiments sa zica testul cu numarul lui cand printeaza chestii
+- Look what "Turned around....." does
 
+- Ask how to write documentation before submitting this code
+- map_reformat.py can add the method of getting rid of comments in file #
 
+-> added map_reformat.py
