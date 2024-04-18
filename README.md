@@ -12,3 +12,4 @@ TODO:
 - map_reformat.py can add the method of getting rid of comments in file #
 
 -> added map_reformat.py
+-> added generatedataset.py rename more things
