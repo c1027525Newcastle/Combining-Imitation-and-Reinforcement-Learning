@@ -8,6 +8,7 @@ from f1tenth_drl.Planners.AgentTrainer import AgentTrainer
 from f1tenth_drl.Planners.AgentTester import AgentTester
 from f1tenth_drl.Utils.utils import *
 import torch
+from ImitationAlgorithms.bc import BCNetwork
 
 
 RENDER_ENV = False
@@ -73,24 +74,32 @@ def run_training_batch(experiment):
         print(f"RunName: {run_dict.run_name}")
 
         env = F110Env(map=run_dict.map_name, num_agents=1)
-        planner = AgentTrainer(run_dict, conf)
         
         # Added a way to allow interrupting training early to ease testing of code
-        try:
-            print("Training")
-            run_simulation_loop_steps(env, planner, run_dict.training_steps, 4)
-            
-            print("Testing")
-            planner = AgentTester(run_dict, conf)
-            run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
-            env.__del__()
+        #TODO remove a stuff in here that is only meant for testing the BC
+        a=1
+        if a==1:
+            try:
+                planner = AgentTrainer(run_dict, conf)
+                print("Training")
+                run_simulation_loop_steps(env, planner, run_dict.training_steps, 4)
+                
+                print("Testing")
+                planner = AgentTester(run_dict, conf)
+                run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
+                env.__del__()
 
-        except KeyboardInterrupt:
-            print("Training interrupted")
-            print("Testing")
-            planner = AgentTester(run_dict, conf)
-            run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
-            env.__del__()
+            except KeyboardInterrupt:
+                print("Training interrupted")
+                print("Testing")
+                planner = AgentTester(run_dict, conf)
+                run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
+                env.__del__()
+        else:#
+            print("Testing")#
+            planner = AgentTester(run_dict, conf)#
+            run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)#
+            env.__del__()#
         
     
 def run_testing_batch(experiment, n_sim_steps=10):
