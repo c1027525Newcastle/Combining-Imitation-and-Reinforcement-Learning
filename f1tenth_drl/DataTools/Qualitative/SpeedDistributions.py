@@ -14,20 +14,10 @@ map_name = "gbr"
 # map_name = "mco"
 rep_number = 0
 pp_n = 0
-base = f"Data/FinalExperiment_{set_number}/"
-names = ["Full planning", "Trajectory tracking", "End-to-end", "Classic"]
+base = f"Data/Experiment_{set_number}/"
+names = ["Classic"]
 algorithm = "TD3"
-sub_paths_td3 = [f"AgentOff_{algorithm}_Game_{map_name}_{id_name}_8_{set_number}_{rep_number}/",
-                f"AgentOff_{algorithm}_TrajectoryFollower_{map_name}_{id_name}_8_{set_number}_{rep_number}/",
-                f"AgentOff_{algorithm}_endToEnd_{map_name}_{id_name}_8_{set_number}_{rep_number}/", 
-                f"PurePursuit_PP_pathFollower_{map_name}_TAL_8_{set_number}_{pp_n}/"]
-
-
-algorithm = "SAC"
-sub_paths_sac = [f"AgentOff_{algorithm}_Game_{map_name}_{id_name}_8_{set_number}_{rep_number}/",
-                f"AgentOff_{algorithm}_TrajectoryFollower_{map_name}_{id_name}_8_{set_number}_{rep_number}/",
-                f"AgentOff_{algorithm}_endToEnd_{map_name}_{id_name}_8_{set_number}_{rep_number}/", 
-                f"PurePursuit_PP_pathFollower_{map_name}_TAL_8_{set_number}_{pp_n}/"]
+sub_paths_td3 = [f"AgentOff_TD3_Game_gbr_Cth_8_1_1/"]
 
 lap_n = 2
 lap_list = np.ones(4, dtype=int) * lap_n
@@ -94,46 +84,16 @@ class TestLapData:
 
 
 def speed_distributions_algs():
-    data_list_t = [TestLapData(base + p, lap_list[i]) for i, p in enumerate(sub_paths_td3)]
-    data_list_s = [TestLapData(base + p, lap_list[i]) for i, p in enumerate(sub_paths_sac)]
-    
-    fig, axes = plt.subplots(2, 4, figsize=(6, 2.5), sharex=True, sharey=True)
-        
-    state_speed_list_t = [d.states[:, 3] for d in data_list_t]
-    state_speed_list_s = [d.states[:, 3] for d in data_list_s]
-        
-    bins = np.arange(2, 8, 0.5)
-    for i in range(len(data_list_t)):
-        axes[0, i].hist(state_speed_list_t[i], color=color_pallet[i], alpha=0.65, bins=bins, density=True)
-        
-        axes[0, i].set_xlim(2, 8)
-        axes[0, i].grid(True)
-        axes[0, i].set_title(names[i], fontsize=10)
-        axes[0, i].xaxis.set_tick_params(labelsize=8)
-
-        axes[1, i].hist(state_speed_list_s[i], color=color_pallet[i], alpha=0.65, bins=bins, density=True)
-        
-        axes[1, i].grid(True)
-        axes[1, i].xaxis.set_tick_params(labelsize=8)
-
-        if i < 3:
-            y_val = 0.45
-            x_val = 5.8
-            axes[0, i].text(x_val, y_val, "TD3", fontdict={'fontsize': 10, 'fontweight':'bold'}, bbox=dict(facecolor='white', alpha=0.99, boxstyle='round,pad=0.15', edgecolor='gainsboro'))
-            axes[1, i].text(x_val, y_val, "SAC", fontdict={'fontsize': 10, 'fontweight':'bold'}, bbox=dict(facecolor='white', alpha=0.99, boxstyle='round,pad=0.15', edgecolor='gainsboro'))
-
-        
-    # axes[0].set_ylim(0, 110)
-    fig.text(0.54, 0.02, "Vehicle Speed (m/s)", fontsize=10, ha='center')
-    axes[0, 0].set_ylabel("Density", fontsize=10)
-    axes[1, 0].set_ylabel("Density", fontsize=10)
-    axes[0, 0].yaxis.set_major_locator(MultipleLocator(0.15))
-    axes[0, 0].yaxis.set_tick_params(labelsize=8)
-    axes[1, 0].yaxis.set_tick_params(labelsize=8)
-    
-    plt.tight_layout()
-    name = f"{base}Imgs/SpeedDistributions_Algs_{map_name.upper()}"
-    std_img_saving(name, True)
+    test_lap_data = TestLapData(base + sub_paths_td3[0], 10)  # Assuming lap number 0
+    speeds = test_lap_data.states[:, 3]
+    plt.figure(figsize=(10, 4))
+    plt.hist(speeds, bins=np.arange(2, 8, 0.5), color='blue', alpha=0.7, density=True)
+    plt.title("Speed Distribution of TD3 on 'mco' map")
+    plt.xlabel("Speed (m/s)")
+    plt.ylabel("Density")
+    plt.grid(True)
+    plt.show()
+    #std_img_saving(name, True)
 
 
 def slip_distributions():

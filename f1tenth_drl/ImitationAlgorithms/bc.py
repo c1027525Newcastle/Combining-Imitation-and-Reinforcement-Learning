@@ -100,13 +100,13 @@ class TestBC:
 
 
 if __name__ == "__main__":
-    # scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_scans.npy'
-    # actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
+    # scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
+    # actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_actions.npy'
     # agent = TrainBC(scans_file, actions_file)
     # agent.train()
     # agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
 
-    data = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
-    data2 = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
-    print(f'Data shape: {data.shape}')
-    print(f'Data2 shape: {data2.shape}')
+    actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
+    history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
+    print(f'Actions shape: {actions.shape}')
+    print(f'History shape: {history.shape}')

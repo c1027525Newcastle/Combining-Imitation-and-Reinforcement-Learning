@@ -10,9 +10,9 @@ import glob
 from matplotlib.ticker import PercentFormatter
 from matplotlib.collections import LineCollection
 
-from LocalMapRacing.DataTools.MapData import MapData
-from LocalMapRacing.GlobalPlanners.PlanningUtils.TrackLine import TrackLine 
-from LocalMapRacing.DataTools.plotting_utils import *
+from f1tenth_drl.DataTools.MapData import MapData
+from f1tenth_drl.Planners.TrackLine import TrackLine 
+from f1tenth_drl.DataTools.plotting_utils import *
 from matplotlib.ticker import MultipleLocator
 import trajectory_planning_helpers as tph
 

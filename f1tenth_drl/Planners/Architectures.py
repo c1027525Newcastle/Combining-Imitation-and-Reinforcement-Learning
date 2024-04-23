@@ -169,6 +169,7 @@ class PlanningArchitecture:
 
         return action
 
+# TODO: L added this
 class PlanningArchitectureBC:
     def __init__(self, map_name):
         self.max_speed = 8
@@ -177,7 +178,7 @@ class PlanningArchitectureBC:
         self.n_beams = 20
         self.waypoint_scale = 2.5
         # self.state_space = self.n_wpts * 2 + 1 + self.n_beams
-        self.state_space = self.n_wpts * 2 + 2 + self.n_beams
+        self.state_space = self.n_wpts * 2 + 2 + self.n_beams # TODO: L changed this from 42 to 82
         # self.state_space = self.n_wpts * 2 + 3 + self.n_beams
         self.action_space = 2
 
