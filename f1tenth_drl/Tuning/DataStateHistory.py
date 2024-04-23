@@ -1,5 +1,7 @@
 import numpy as np
 import os
+from f1tenth_drl.Planners.Architectures import PlanningArchitectureBC
+
 
 class DataStateHistory:
     def __init__(self, experiment):
@@ -11,12 +13,23 @@ class DataStateHistory:
         self.scans = []
     
         self.lap_n = 0
+
+        # TODO: L added this
+        self.architecture = PlanningArchitectureBC(experiment.map_name)
+
     
     def add_memory_entry(self, obs, action):
-        state = obs['full_states'][0]
+        # state = obs['full_states'][0]
 
-        self.states.append(state)
-        self.actions.append(action)
+        # self.states.append(state)
+        # self.actions.append(action)
+        # self.scans.append(obs['scans'][0])
+
+        # TODO: L changed this
+        transformed_state = self.architecture.transform_obs(obs)  # transform obs into the state using PlanningArchitecture logic
+        transformed_action = self.architecture.transform_action(action)  # transform action to match the used range
+        self.states.append(transformed_state)
+        self.actions.append(transformed_action)
         self.scans.append(obs['scans'][0])
     
     def save_history(self):
@@ -24,10 +37,10 @@ class DataStateHistory:
         actions = np.array(self.actions)
 
         lap_history = np.concatenate((states, actions), axis=1)
-        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_history.npy", lap_history)
+        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_history.npy", states)#_history.npy", lap_history)
         
         scans = np.array(self.scans)
-        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_scans.npy", scans)
+        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_actions.npy", actions) #_scans.npy", scans)
         
         self.states = []
         self.actions = []

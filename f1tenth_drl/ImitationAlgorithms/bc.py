@@ -99,30 +99,14 @@ class TestBC:
         return action
 
 
-#TODO: Remove this function as it's here only to test little things
-# def testing_things():
-#     experiment = "Experiment"
-#     run_list = setup_run_list(experiment)
-#     conf = load_conf("config_file")
-    
-#     for i, run_dict in enumerate(run_list):
-#         seed_randomness(run_dict)
-#         print(f"Running experiment: {i}")
-#         print(f"RunName: {run_dict.run_name}")
-
-#         env = F110Env(map=run_dict.map_name, num_agents=1)
-#         #planner = AgentTrainer(run_dict, conf)
-
-#         print("Testing")
-#         planner = AgentTester(run_dict, conf)
-#         run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
-#         env.__del__()
-
-
 if __name__ == "__main__":
-    #TrainBC() #TODO: Comment this or remove other stuff
-    scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_scans.npy'
-    actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
-    agent = TrainBC(scans_file, actions_file)
-    agent.train()
-    agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
+    # scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_scans.npy'
+    # actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
+    # agent = TrainBC(scans_file, actions_file)
+    # agent.train()
+    # agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
+
+    data = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
+    data2 = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
+    print(f'Data shape: {data.shape}')
+    print(f'Data2 shape: {data2.shape}')
