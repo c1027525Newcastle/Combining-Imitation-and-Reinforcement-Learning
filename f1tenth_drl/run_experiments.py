@@ -8,7 +8,6 @@ from f1tenth_drl.Planners.AgentTrainer import AgentTrainer
 from f1tenth_drl.Planners.AgentTester import AgentTester
 from f1tenth_drl.Utils.utils import *
 import torch
-from ImitationAlgorithms.bc import BCNetwork
 
 
 RENDER_ENV = False

@@ -5,6 +5,7 @@ import torch.nn as nn
 from pathlib import Path
 import torch.optim as optim
 from f1tenth_drl.Utils.Networks import DoublePolicyNet
+import time
 
 #from f1tenth_drl.f1tenth_gym import F110Env ##
 #from f1tenth_drl.Utils.utils import * ##
@@ -13,31 +14,36 @@ from f1tenth_drl.Utils.Networks import DoublePolicyNet
 EXPLORE_NOISE = 0.1
 
 
-class BCNetwork(nn.Module):
-    def __init__(self, input_size, output_size):
-        super(BCNetwork, self).__init__()
-        self.fc = nn.Sequential(
-            nn.Linear(input_size, 128),  # input_size should be 60
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, output_size)
-        )
+# class BCNetwork(nn.Module):
+#     def __init__(self, input_size, output_size):
+#         super(BCNetwork, self).__init__()
+#         self.fc = nn.Sequential(
+#             nn.Linear(input_size, 128),  # input_size should be 60
+#             nn.ReLU(),
+#             nn.Linear(128, 64),
+#             nn.ReLU(),
+#             nn.Linear(64, output_size)
+#         )
 
-    def forward(self, x):
-        return self.fc(x)
+#     def forward(self, x):
+#         return self.fc(x)
     
 
 class TrainBC:
-    def __init__(self, scans_file, actions_file):
-        self.scans = np.load(scans_file)
-        self.actions = np.load(actions_file)
-        self.model = BCNetwork(self.scans.shape[1], self.actions.shape[1]) ###TODO: changed to/from BCNetwork/DoublePolicyNet
+    def __init__(self, scans_files, actions_files):
+        # self.scans = np.load(scans_file)
+        # self.actions = np.load(actions_file)
+
+        self.scans = np.concatenate([np.load(file) for file in scans_files], axis=0)
+        self.actions = np.concatenate([np.load(file) for file in actions_files], axis=0)
+        
+
+        self.model = DoublePolicyNet(self.scans.shape[1], self.actions.shape[1]) ###TODO: changed to/from BCNetwork/DoublePolicyNet
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
         
 
-    def train(self, epochs=100000, batch_size=64):
+    def train(self, epochs=15000, batch_size=64):
         scans_tensor = torch.tensor(self.scans, dtype=torch.float32)
         actions_tensor = torch.tensor(self.actions, dtype=torch.float32)
 
@@ -66,7 +72,7 @@ class TrainBC:
                 print(f'Epoch {epoch+1}, Loss: {loss.item()}')
 
         # Print best results and moment it happend
-        print(f"\nBest loss was {best_loss:.2f} at epoch {best_epoch}")
+        print(f"\nBest loss was {best_loss} at epoch {best_epoch}")
         return best_loss, best_epoch
 
     def act(self, state, noise=EXPLORE_NOISE):
@@ -100,14 +106,38 @@ class TestBC:
 
 
 if __name__ == "__main__":
-    scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
-    actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_actions.npy'
+    scans_file = []
+    actions_file = []
+
+    map_list = ['mco', 'aut', 'gbr', 'esp']
+    for name in map_list:
+        scans_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_0_history.npy')
+        actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_0_actions.npy')
+
+    time_start = time.time()
+
     agent = TrainBC(scans_file, actions_file)
     agent.train()
     agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
+
+    time_end = time.time()
+    print(f"\nTraining took {time_end - time_start} seconds")
 
     # actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
     # history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
     # print(f'History shape: {history.shape}')
     # print(f'Actions shape: {actions.shape}')
+
+    # print("\nActions Statistics:")
+    # print(f"Mean: {np.mean(actions, axis=0)}")
+    # print(f"Std Deviation: {np.std(actions, axis=0)}")
+    # print(f"Min: {np.min(actions, axis=0)}")
+    # print(f"Max: {np.max(actions, axis=0)}")
+
+    # # Descriptive statistics for history (state features)
+    # print("\nHistory (State Features) Statistics:")
+    # print(f"Mean: {np.mean(history, axis=0)}")
+    # print(f"Std Deviation: {np.std(history, axis=0)}")
+    # print(f"Min: {np.min(history, axis=0)}")
+    # print(f"Max: {np.max(history, axis=0)}")
     

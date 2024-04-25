@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from f1tenth_drl.Planners.Architectures import PlanningArchitectureBC
+from sklearn.preprocessing import MinMaxScaler
 
 
 class DataStateHistory:
@@ -36,6 +37,10 @@ class DataStateHistory:
         states = np.array(self.states)
         actions = np.array(self.actions)
 
+        scaler = MinMaxScaler(feature_range=(-1, 1))
+        actions = scaler.fit_transform(actions)#TODO: L added this
+        states = scaler.fit_transform(states)#TODO: L added this
+
         lap_history = np.concatenate((states, actions), axis=1)
         np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_history.npy", states)#_history.npy", lap_history)
         
@@ -46,22 +51,3 @@ class DataStateHistory:
         self.actions = []
         self.scans = []
         self.lap_n += 1
-        
-        """
-            Single Track Dynamic Vehicle Dynamics.
-
-        Args:
-            x (numpy.ndarray (3, )): vehicle state vector (x1, x2, x3, x4, x5, x6, x7)
-                x1: x position in global coordinates
-                x2: y position in global coordinates
-                x3: steering angle of front wheels
-                x4: velocity in x direction
-                x5: yaw angle
-                x6: yaw rate
-                x7: slip angle at vehicle center
-        
-        """
-
-
-if __name__ == "__main__":
-    pass

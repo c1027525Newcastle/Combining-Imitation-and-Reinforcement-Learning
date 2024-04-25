@@ -15,7 +15,7 @@ training_steps: 30000 ## Change training step to 60,000
 n_test_laps: 20
 
 ## TEST
-algorithm: "TD3"
+algorithm: "BC"
 id_name: "Cth"
 map_name: "mco"
 
