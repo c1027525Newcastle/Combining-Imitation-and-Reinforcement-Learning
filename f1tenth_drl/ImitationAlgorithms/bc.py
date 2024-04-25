@@ -37,7 +37,7 @@ class TrainBC:
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
         
 
-    def train(self, epochs=10000, batch_size=64):
+    def train(self, epochs=100000, batch_size=64):
         scans_tensor = torch.tensor(self.scans, dtype=torch.float32)
         actions_tensor = torch.tensor(self.actions, dtype=torch.float32)
 
@@ -100,13 +100,14 @@ class TestBC:
 
 
 if __name__ == "__main__":
-    # scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
-    # actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_actions.npy'
-    # agent = TrainBC(scans_file, actions_file)
-    # agent.train()
-    # agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
+    scans_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_history.npy'
+    actions_file = 'Data/GenerateDataSet_1/RawData/PurePursuit_mco_DataGen_1_Lap_0_actions.npy'
+    agent = TrainBC(scans_file, actions_file)
+    agent.train()
+    agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
 
-    actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
-    history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
-    print(f'Actions shape: {actions.shape}')
-    print(f'History shape: {history.shape}')
+    # actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
+    # history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
+    # print(f'History shape: {history.shape}')
+    # print(f'Actions shape: {actions.shape}')
+    

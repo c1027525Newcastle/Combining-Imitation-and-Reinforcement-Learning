@@ -207,6 +207,7 @@ class PlanningArchitectureBC:
         
         motion_variables = np.array([speed, steering_angle])
         # motion_variables = np.array([speed, anglular_vel, steering_angle])
+        #print("\nShowing stuff size: ", len(scan), len(relative_pts), len(motion_variables), "\n") #TODO: L Here for testing size
         state = np.concatenate((scan, relative_pts.flatten(), motion_variables))
         # state = np.concatenate((scan, relative_pts.flatten(), [speed]))
         

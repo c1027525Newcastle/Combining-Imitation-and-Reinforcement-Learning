@@ -84,7 +84,7 @@ def run_training_batch(experiment):
                 planner = AgentTester(run_dict, conf)
                 run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
                 env.__del__()
-        elif run_dict.algrithm == "BC":#
+        elif run_dict.algorithm == "BC":#
             print("Testing")#
             planner = AgentTester(run_dict, conf)#
             run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)#

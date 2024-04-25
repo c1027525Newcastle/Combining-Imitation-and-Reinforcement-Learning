@@ -44,7 +44,8 @@ def generate_pp_data():
         
         env = F110Env(map=experiment.map_list[m], num_agents=1)
         RaceCar.scan_simulator = None
-        env.sim.agents[0] = RaceCar(env.sim.params, env.sim.seed, num_beams=60, time_step=env.sim.time_step, integrator=env.sim.integrator)
+        # Changed num_beams to 20 from 60 as to match the intended architecture for the BC
+        env.sim.agents[0] = RaceCar(env.sim.params, env.sim.seed, num_beams=20, time_step=env.sim.time_step, integrator=env.sim.integrator)
         env.sim.set_map(env.map_path, env.map_ext)
         run_simulation_loop_laps(env, planner, experiment.n_test_laps)
         
