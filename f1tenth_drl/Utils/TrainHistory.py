@@ -86,11 +86,21 @@ class TrainHistory():
     def save_csv_data(self):
         data = []
         ptr = self.ptr  #exclude the last entry
+        # for i in range(ptr): 
+        #     data.append([i, self.rewards[i], self.lengths[i], self.progresses[i], self.laptimes[i]])
+        # save_csv_array(data, self.path + "/training_data_episodes.csv")
+
+        data.append(["Episode", "Reward", "Length", "Progress(%)", "Laptime"])
+
         for i in range(ptr): 
-            data.append([i, self.rewards[i], self.lengths[i], self.progresses[i], self.laptimes[i]])
-        save_csv_array(data, self.path + "/training_data_episodes.csv")
+            if self.progresses[i] > 99 or (self.progresses[i] < 0.3 and self.laptimes[i] > 2):
+                data.append([i, self.rewards[i], self.lengths[i], self.progresses[i], self.laptimes[i]])
+            else:
+                data.append([i, self.rewards[i], self.lengths[i], self.progresses[i], None])
+        save_csv_array(data, self.path + "training_data_episodes.csv")
 
         t_steps = np.cumsum(self.lengths[0:ptr])/100
+        
         plt.figure(3)
         
         plt.clf()

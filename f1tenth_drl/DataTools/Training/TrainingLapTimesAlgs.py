@@ -12,7 +12,7 @@ def make_training_laptimes_plot():
     set_number = 1
     # base_path = f"Data/FinalExperiment_{set_number}/"
     base_path = f"Data/Experiment_{set_number}/"
-    vehicle_keys = ["Game", "TrajectoryFollower", "endToEnd"]
+    vehicle_keys = ["Game"]
     labels = ["Full planning", "Trajectory tracking", "End-to-end"]
     
     # map_list = ["gbr"]
@@ -20,15 +20,13 @@ def make_training_laptimes_plot():
     # map_name = "mco"
     # algorithm = "SAC"
     # algorithm = "TD3"
-    algorithm_list = ["SAC", "TD3"]
+    algorithm_list = ["TD3"]
     
     max_speed = 8
-    general_id = "TAL"
+    general_id = "Cth"
     n_repeats = 3
     n_train_steps = 60
 
-    # fig, axs = plt.subplots(1, 1, figsize=(5, 1.7))
-    # fig, axs = plt.subplots(1, 1, figsize=(5, 2.1))
     fig, axs = plt.subplots(2, 3, figsize=(5.3, 2.8), sharey=True, sharex=True)
     
     for a_n, algorithm in enumerate(algorithm_list):
@@ -38,7 +36,7 @@ def make_training_laptimes_plot():
             steps_list.append([])
             lap_time_list.append([])
             for j in range(n_repeats):
-                path = base_path + f"AgentOff_{algorithm}_{vehicle_key}_{map_name}_{general_id}_{max_speed}_{set_number}_{j}/"
+                path = base_path + f"AgentOff_{algorithm}_{vehicle_key}_{map_name}_{general_id}_{max_speed}_{set_number}_{1}/"
                 rewards, lengths, progresses, _ = load_csv_data(path)
                 steps = np.cumsum(lengths) / 1000
                 
@@ -80,6 +78,7 @@ def make_training_laptimes_plot():
     # fig.legend(h[:3], l[:3], loc='lower center', bbox_to_anchor=(0.5, 0.9), ncol=3)
     
     name = f"{base_path}Imgs/TrainingLapTimesAlgorithms_{set_number}"
+    plt.show()
     std_img_saving(name)
 
 

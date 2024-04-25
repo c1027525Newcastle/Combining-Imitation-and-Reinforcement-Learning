@@ -12,16 +12,6 @@ from ImitationAlgorithms.bc import BCNetwork
 
 
 RENDER_ENV = False
-# RENDER_ENV = True
-
-        
-def  select_test_agent(conf, run_dict):
-    if run_dict.planner_type == "AgentOff":
-        planner = AgentTester(run_dict, conf)
-    else:
-        raise ValueError(f"Planner type not recognised: {run_dict.planner_type}")    
-    
-    return planner
 
 def run_simulation_loop_steps(env, planner, steps, steps_per_action=10):
     observation, reward, done, info = env.reset(poses=np.array([[0, 0, 0]]))
@@ -76,9 +66,8 @@ def run_training_batch(experiment):
         env = F110Env(map=run_dict.map_name, num_agents=1)
         
         # Added a way to allow interrupting training early to ease testing of code
-        #TODO remove a stuff in here that is only meant for testing the BC
-        a=1
-        if a==1:
+        #TODO: L remove a stuff in here that is only meant for testing the BC
+        if run_dict.algorithm != "BC":
             try:
                 planner = AgentTrainer(run_dict, conf)
                 print("Training")
@@ -95,66 +84,20 @@ def run_training_batch(experiment):
                 planner = AgentTester(run_dict, conf)
                 run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
                 env.__del__()
-        else:#
+        elif run_dict.algrithm == "BC":#
             print("Testing")#
             planner = AgentTester(run_dict, conf)#
             run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)#
             env.__del__()#
-        
-    
-def run_testing_batch(experiment, n_sim_steps=10):
-    # run_list = setup_run_list(experiment, new_run=True)
-    run_list = setup_run_list(experiment, new_run=False)
-    conf = load_conf("config_file")
-    
-    for i, run_dict in enumerate(run_list):
-        seed_randomness(run_dict)
-        print(f"Running experiment: {i}")
-        print(f"RunName: {run_dict.run_name}")
-
-        env = F110Env(map=run_dict.map_name, num_agents=1)
-        print("Testing")
-        planner = select_test_agent(conf, run_dict)
-        run_simulation_loop_laps(env, planner, run_dict.n_test_laps, n_sim_steps)
-        
-
-def run_general_test_batch(experiment):
-    run_list = setup_run_list(experiment, new_run=False)
-    conf = load_conf("config_file")
-    map_list = ["aut", "esp", "gbr", "mco"]
-    
-    for i, run_dict in enumerate(run_list):
-        print(f"Running experiment: {i}")
-        print(f"RunName: {run_dict.run_name}")
-        for m in range(len(map_list)):
-            print(f"Testing on map: {map_list[m]}")
-            run_dict.map_name = map_list[m]
-            env = F110Env(map=run_dict.map_name, num_agents=1)
-            print("Testing")
-            planner = select_test_agent(conf, run_dict)
-            run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 10)
-        
+        else:
+            raise ValueError("Algorithm not recognised")
 
     
 def main():
     experiment = "Experiment"
-    # experiment = "main"
-    
     run_training_batch(experiment)
-
-    # run_testing_batch(experiment, 10)
-
-    # run_general_test_batch(experiment)
-
-
-def run_pp_tests():
-    experiment = "ConfigPP"
-
-    run_testing_batch(experiment)
 
     
 if __name__ == "__main__":
     main()
-    # run_pp_tests()
-    # run_general_test_batch()
 
