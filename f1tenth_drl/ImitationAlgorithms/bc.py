@@ -30,11 +30,8 @@ EXPLORE_NOISE = 0.1
     
 
 class TrainBC:
-    def __init__(self, scans_files, actions_files):
-        # self.scans = np.load(scans_file)
-        # self.actions = np.load(actions_file)
-
-        self.scans = np.concatenate([np.load(file) for file in scans_files], axis=0)
+    def __init__(self, history_files, actions_files):
+        self.scans = np.concatenate([np.load(file) for file in history_files], axis=0)
         self.actions = np.concatenate([np.load(file) for file in actions_files], axis=0)
         
 
@@ -43,8 +40,8 @@ class TrainBC:
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
         
 
-    def train(self, epochs=15000, batch_size=64):
-        scans_tensor = torch.tensor(self.scans, dtype=torch.float32)
+    def train(self, epochs=5044, batch_size=64):
+        history_tensor = torch.tensor(self.scans, dtype=torch.float32)
         actions_tensor = torch.tensor(self.actions, dtype=torch.float32)
 
         # Store best reuslts and moment they happened
@@ -53,10 +50,10 @@ class TrainBC:
 
         # Loop for training
         for epoch in range(epochs):
-            permutation = torch.randperm(scans_tensor.size()[0])
-            for i in range(0, scans_tensor.size()[0], batch_size):
+            permutation = torch.randperm(history_tensor.size()[0])
+            for i in range(0, history_tensor.size()[0], batch_size):
                 indices = permutation[i:i+batch_size]
-                batch_scans, batch_actions = scans_tensor[indices], actions_tensor[indices]
+                batch_scans, batch_actions = history_tensor[indices], actions_tensor[indices]
 
                 self.optimizer.zero_grad()
                 outputs = self.model(batch_scans)
@@ -68,11 +65,14 @@ class TrainBC:
                 best_loss = loss.item()
                 best_epoch = epoch
             
-            if epoch % 1000 == 0:
-                print(f'Epoch {epoch+1}, Loss: {loss.item()}')
+            if (epoch % 1000 == 0 and epoch != 0) or epoch == 1 or (epoch == epochs -1):
+                if epoch == epochs -1:
+                    print(f'Last Epoch {epoch}, Loss: {loss.item()}\n')
+                else:
+                    print(f'Epoch {epoch}, Loss: {loss.item()}')
 
-        # Print best results and moment it happend
-        print(f"\nBest loss was {best_loss} at epoch {best_epoch}")
+        # Print best loss and epoch it happend for tuning purposes
+        print(f"Best loss was {best_loss} at epoch {best_epoch}")
         return best_loss, best_epoch
 
     def act(self, state, noise=EXPLORE_NOISE):
@@ -94,9 +94,8 @@ class TrainBC:
 class TestBC:
     #TODO: Will correctly implement this later
     def __init__(self):#, filename, directory):
-        #self.actor = torch.load(directory + f'{filename}_actor.pth') # TODO: changed this
+        #self.actor = torch.load(directory + f'{filename}_actor.pth') # TODO: : changed this
         self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
-        #self.actor = torch.load(directory + f'{filename}_actor.pth')
 
     def act(self, state):
         state = torch.FloatTensor(state.reshape(1, -1))
@@ -106,22 +105,27 @@ class TestBC:
 
 
 if __name__ == "__main__":
-    scans_file = []
+    history_file = []
     actions_file = []
 
-    map_list = ['mco', 'aut', 'gbr', 'esp']
-    for name in map_list:
-        scans_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_0_history.npy')
-        actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_0_actions.npy')
+    num_laps = 4
+    map_list = ['mco']#, 'aut', 'gbr', 'esp']
+    try:
+        for name in map_list:
+            for lap_num in range(0, num_laps):
+                history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_{lap_num}_history.npy')
+                actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_{lap_num}_actions.npy')
+    except FileNotFoundError:
+        print('Files for database not found')
 
     time_start = time.time()
 
-    agent = TrainBC(scans_file, actions_file)
+    agent = TrainBC(history_file, actions_file)
     agent.train()
     agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
 
     time_end = time.time()
-    print(f"\nTraining took {time_end - time_start} seconds")
+    print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
 
     # actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
     # history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
