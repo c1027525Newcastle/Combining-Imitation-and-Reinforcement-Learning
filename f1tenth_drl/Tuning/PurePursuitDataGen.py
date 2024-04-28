@@ -58,9 +58,11 @@ class PurePursuitDataGen:
         return action
 
     def done_callback(self, final_obs):
-        self.data_history.add_memory_entry(final_obs, np.array([0, 0]))
-        self.data_history.save_history()
-        
+        # TODO: L Only add the laps that are completed
+        if bool(final_obs['collisions'][0]) == False:
+            self.data_history.add_memory_entry(final_obs, np.array([0, 0]))
+            self.data_history.save_history()
+            
         progress = self.track_line.calculate_progress_percent([final_obs['poses_x'][0], final_obs['poses_y'][0]]) * 100
         
         print(f"Test lap complete --> Time: {final_obs['lap_times'][0]:.2f}, Colission: {bool(final_obs['collisions'][0])}, Lap p: {progress:.1f}%")
