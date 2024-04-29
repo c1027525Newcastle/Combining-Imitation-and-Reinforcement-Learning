@@ -20,12 +20,6 @@ class DataStateHistory:
 
     
     def add_memory_entry(self, obs, action):
-        # state = obs['full_states'][0]
-
-        # self.states.append(state)
-        # self.actions.append(action)
-        # self.scans.append(obs['scans'][0])
-
         # TODO: L changed this
         transformed_state = self.architecture.transform_obs(obs)  # transform obs into the state using PlanningArchitecture logic
         transformed_action = self.architecture.transform_action(action)  # transform action to match the used range

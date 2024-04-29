@@ -20,7 +20,7 @@ class AgentTester:
         self.agent = create_test_agent(self.name, self.path, run)
         
         self.vehicle_state_history = VehicleStateHistory(run, f"Testing{run.map_name.upper()}/")
-#capitalise
+
 
     def plan(self, obs):
         nn_state = self.architecture.transform_obs(obs)
@@ -34,6 +34,7 @@ class AgentTester:
         self.vehicle_state_history.add_memory_entry(obs, self.action)
         
         return self.action 
+
 
     def done_callback(self, s_prime):
         """

@@ -10,8 +10,6 @@ from f1tenth_drl.Utils.utils import *
 import torch
 
 
-RENDER_ENV = False
-
 def run_simulation_loop_steps(env, planner, steps, steps_per_action=10):
     observation, reward, done, info = env.reset(poses=np.array([[0, 0, 0]]))
     
@@ -27,8 +25,6 @@ def run_simulation_loop_steps(env, planner, steps, steps_per_action=10):
                 planner.done_callback(observation)
                 observation, reward, done, info = env.reset(poses=np.array([[0, 0, 0]]))
                 break
-                  
-        if RENDER_ENV: env.render('human_fast')
         
 def run_simulation_loop_laps(env, planner, n_laps, n_sim_steps=10):
     for lap in range(n_laps):
@@ -40,9 +36,6 @@ def run_simulation_loop_laps(env, planner, n_laps, n_sim_steps=10):
             while mini_i > 0 and not done:
                 observation, reward, done, info = env.step(action[None, :])
                 mini_i -= 1
-
-            # if RENDER_ENV: env.render('human')
-            # if RENDER_ENV: env.render('human_fast')
     
         planner.done_callback(observation)
     
@@ -64,9 +57,9 @@ def run_training_batch(experiment):
 
         env = F110Env(map=run_dict.map_name, num_agents=1)
         
-        # Added a way to allow interrupting training early to ease testing of code
-        #TODO: L remove a stuff in here that is only meant for testing the BC
+        # BC is trained in its own file so this functions needs only to run the testing part
         if run_dict.algorithm != "BC":
+            # Added a way to allow interrupting training early to ease testing of code
             try:
                 planner = AgentTrainer(run_dict, conf)
                 print("Training")
@@ -84,7 +77,7 @@ def run_training_batch(experiment):
                 run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
                 env.__del__()
         elif run_dict.algorithm == "BC":
-            print("Testing")
+            print("Testing BC")
             planner = AgentTester(run_dict, conf)
             run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
             env.__del__()

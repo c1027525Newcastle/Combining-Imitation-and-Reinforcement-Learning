@@ -8,10 +8,6 @@ from f1tenth_drl.Utils.Networks import DoublePolicyNet
 import time
 import os
 
-#from f1tenth_drl.f1tenth_gym import F110Env ##
-#from f1tenth_drl.Utils.utils import * ##
-#from f1tenth_drl.run_experiments import * ##
-
 EXPLORE_NOISE = 0.1
 
 
@@ -39,12 +35,17 @@ class TrainBC:
     def reintialize(self):
         self.model = DoublePolicyNet(self.scans.shape[1], self.actions.shape[1])
         self.criterion = nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.005) #0.005
         
 
-    def train(self, epochs=10000, batch_size=64):
+    def train(self):
+        epochs=6000 #3000
+        batch_size=64 #64
+
         history_tensor = torch.tensor(self.scans, dtype=torch.float32)
         actions_tensor = torch.tensor(self.actions, dtype=torch.float32)
+
+        print('Training model')
 
         train_algorithm = True
         while train_algorithm:
@@ -70,13 +71,16 @@ class TrainBC:
                     best_epoch = epoch
                     
                 
-                if (epoch % 1000 == 0 and epoch != 0) or epoch == 1 or (epoch == epochs -1):
+                if (epoch % 500 == 0 and epoch != 0) or epoch == 1 or (epoch == epochs -1):
                     if epoch == epochs -1:
                         print(f'Last Epoch {epoch}, Loss: {loss.item()}\n')
                     else:
                         print(f'Epoch {epoch}, Loss: {loss.item()}')
 
-            if best_epoch <= 0.75 * epochs:
+            # Comment out the following line to enable the check for overfitting
+            train_algorithm = False
+            # Check if the model is overfitting and if so, restart training
+            if best_epoch <= 0.75 * epochs and train_algorithm == True:
                 print(f"Best loss was {best_loss} at epoch {best_epoch} out of {epochs} epochs")
                 epochs = best_epoch
                 self.reintialize()
@@ -98,10 +102,9 @@ class TrainBC:
 
 
 class TestBC:
-    #TODO: Will correctly implement this later
-    def __init__(self):#, filename, directory):
-        #self.actor = torch.load(directory + f'{filename}_actor.pth') # TODO: : changed this
-        self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
+    def __init__(self):
+        self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth')
+
 
     def act(self, state):
         state = torch.FloatTensor(state.reshape(1, -1))
@@ -114,14 +117,32 @@ if __name__ == "__main__":
     history_file = []
     actions_file = []
 
-    num_laps = 1
-    map_list = ['gbr']#, 'aut', 'gbr', 'esp']
+    # Choose number of laps to train on
+    num_laps = 10#3
+
+    # Choose which maps to train on # All maps: ['mco', 'aut', 'gbr', 'esp']
+    map_list = ['gbr']
     try:
-        for name in map_list:
+        for map_name in map_list:
             for lap_num in range(0, num_laps):
-                if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_{lap_num}_history.npy'):
-                    history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_{lap_num}_history.npy')
-                    actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{name}_DataGen_1_Lap_{lap_num}_actions.npy')
+                if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
+                    # Code to reduce the size of history and actions files so that we can train faster on the beggining of the laps
+                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+                    # cutt_off = int(len(history) * 0.8)
+                    # reduced_history = history[:cutt_off]
+                    # reduced_actions = actions[:cutt_off]
+                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
+                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
+
+                    history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+                    actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+
+                    # Code to check shapes of history and actions
+                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+                    # print(f'History shape: {history.shape}')
+                    # print(f'Actions shape: {actions.shape}')
                 else:
                     break
     except FileNotFoundError:
@@ -131,11 +152,12 @@ if __name__ == "__main__":
 
     agent = TrainBC(history_file, actions_file)
     agent.train()
-    agent.save('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_mco_Cth_8_1_1_actor.pth')
+    agent.save(f'Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
 
     time_end = time.time()
     print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
 
+    # Code to check shapes of history and actions files
     # actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
     # history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
     # print(f'History shape: {history.shape}')

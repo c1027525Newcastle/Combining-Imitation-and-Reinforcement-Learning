@@ -16,7 +16,6 @@ from f1tenth_drl.Planners.TrackLine import TrackLine
 from f1tenth_drl.Tuning.DataStateHistory import DataStateHistory
 
 
-
 class PurePursuitDataGen:
     def __init__(self, conf, experiment):
         self.conf = conf
@@ -39,7 +38,6 @@ class PurePursuitDataGen:
         position = np.array([obs['poses_x'][0], obs['poses_y'][0]])
         theta = obs['poses_theta'][0]
         
-        # lookahead = self.lookahead
         lookahead = 1 + 0.6 * obs['linear_vels_x'][0] / 8
         lookahead_point = self.track_line.get_lookahead_point(position, lookahead)
 
@@ -68,7 +66,6 @@ class PurePursuitDataGen:
         print(f"Test lap complete --> Time: {final_obs['lap_times'][0]:.2f}, Colission: {bool(final_obs['collisions'][0])}, Lap p: {progress:.1f}%")
 
 
-
 @njit(fastmath=False, cache=True)
 def get_actuation(pose_theta, lookahead_point, position, lookahead_distance, wheelbase):
     waypoint_y = np.dot(np.array([np.sin(-pose_theta), np.cos(-pose_theta)]), lookahead_point[0:2]-position)
@@ -78,4 +75,3 @@ def get_actuation(pose_theta, lookahead_point, position, lookahead_distance, whe
     radius = 1/(2.0*waypoint_y/lookahead_distance**2)
     steering_angle = np.arctan(wheelbase/radius)
     return speed, steering_angle
-

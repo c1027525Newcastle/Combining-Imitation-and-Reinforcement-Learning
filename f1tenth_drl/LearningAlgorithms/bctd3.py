@@ -36,10 +36,19 @@ class TrainBCTD3:
 
         self.replay_buffer = OffPolicyBuffer(state_dim, action_dim)
 
+        # Initialize the BC model and choose the percentage of times it affects TD3 during training
+        self.imitation_model = torch.load('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth')
+        self.imitation_probability = 0.05
+
     def act(self, state, noise=EXPLORE_NOISE):
         state = torch.FloatTensor(state.reshape(1, -1))
-
-        action = self.actor(state).data.numpy().flatten()
+        
+        # Choose between acting with BC or TD3 model
+        if np.random.rand() < self.imitation_probability:
+            with torch.no_grad():
+                action = self.imitation_model(state).data.numpy().flatten()
+        else:
+            action = self.actor(state).data.numpy().flatten()
         
         if noise != 0: 
             action = (action + np.random.normal(0, noise, size=self.act_dim))

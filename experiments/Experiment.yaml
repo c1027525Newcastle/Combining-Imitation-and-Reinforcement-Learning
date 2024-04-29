@@ -12,10 +12,10 @@ num_beams: 20
 
 training_steps: 30000 ## Change training step to 60,000
 
-n_test_laps: 20 ####
+n_test_laps: 100 #20 ####
 
 ## TEST
-algorithm: "BC"
+algorithm: "TD3"
 id_name: "Cth"
 map_name: "gbr"
 

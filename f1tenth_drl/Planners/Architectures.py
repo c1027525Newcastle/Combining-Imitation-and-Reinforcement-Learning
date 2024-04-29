@@ -9,6 +9,8 @@ def select_architecture(run, conf):
         architecture = FastArchitecture(run, conf)
     elif run.state_vector == "TrajectoryFollower":
         architecture = TrajectoryArchitecture(run, conf)
+    elif run.algorithm == "BC":
+        architecture = PlanningArchitectureBC(run.map_name)
     elif run.state_vector == "Game":
         architecture = PlanningArchitecture(run, conf)
     else:
