@@ -2,15 +2,15 @@
 planner_type: "PurePursuit"
 racing_line: True
 pp_speed_mode: "racing_line"
-lookahead: 1.6
+lookahead: 1.5 #1.6
 # lookahead: 1
 # max_speed: 5
 max_speed: 8
 
 set_n: 1
-random_seed: 0
+random_seed: 100 #0
 n_scans: 2
-n_test_laps: 1000
+n_test_laps: 2500
 
 id_name: "DataGen"
 

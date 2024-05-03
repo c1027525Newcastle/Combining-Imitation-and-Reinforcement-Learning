@@ -21,8 +21,6 @@ SAVE_PDF = True
 
 vehicle_names = ["Classic", "Full Planning", "Trajectory tracking", "End-to-End"]
 vehicle_data = {"Game": 1, "pathFollower": 0, "TrajectoryFollower": 2, "endToEnd": 3}
-# map_list = ["aut", "esp", "gbr", "mco"]
-#map_list = ["esp"]
 map_list = ["gbr"]
 
 
@@ -46,10 +44,6 @@ class AnalyseTestLapData:
 
     def explore_folder(self, path):
         vehicle_folders = glob.glob(f"{path}*/")
-        # vehicle_folders = glob.glob(f"{path}Pure*mco*0/")
-        # vehicle_folders = glob.glob(f"{path}*esp*1/")
-        # vehicle_folders = glob.glob(f"{path}*mco*0/")
-        # vehicle_folders = glob.glob(f"{path}*0/")
         print(f"{len(vehicle_folders)} folders found")
 
         set = 1
@@ -64,8 +58,7 @@ class AnalyseTestLapData:
     
 
     def process_folder(self):
-        # self.map_name = self.vehicle_name.split("_")[3]
-        self.map_name = "gbr"#"mco"#"aut"
+        self.map_name = "gbr"
         self.map_data = MapData(self.map_name)
         self.std_track = TrackLine(self.map_name, False)
         self.racing_track = TrackLine(self.map_name, True)
@@ -79,17 +72,14 @@ class AnalyseTestLapData:
         self.slip_distributions_path = "/".join(self.path.split("/")[:-2]) + f"/Imgs/SlipDistributions{self.map_name.upper()}/"
         ensure_path_exists(self.testing_velocity_path)
         ensure_path_exists(self.clipped_trajectories_path)
-        # ensure_path_exists(self.slip_distributions_path)
 
-        for self.lap_n in range(21):
+        for self.lap_n in range(9):
             if not self.load_lap_data(): break # no more laps
             self.plot_velocity_heat_map()
-            # self.slip_angle_distribution()
 
 
     def load_lap_data(self):
         try:
-            # data = np.load(self.path + f"TestingESP/Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
             data = np.load(self.path + f"Testing{self.map_name.upper()}/Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
         except Exception as e:
             print(e)
@@ -98,7 +88,7 @@ class AnalyseTestLapData:
         self.states = data[:, :7]
         self.actions = data[:, 7:]
 
-        return 1 # to say success
+        return 1
     
 
     def plot_velocity_heat_map(self): 
@@ -122,6 +112,7 @@ class AnalyseTestLapData:
         line = plt.gca().add_collection(lc)
         cbar = plt.colorbar(line,fraction=0.046, pad=0.04, shrink=0.99)
         cbar.ax.tick_params(labelsize=25)
+        cbar.set_label('Speed (m/s)', rotation=270, labelpad=15) # TODO: L added this
         plt.gca().set_aspect('equal', adjustable='box')
 
         plt.tight_layout()
@@ -156,18 +147,14 @@ def mco_right_limits():
 def analyse_folder():
 
     p = "Data/"
-    set_n = 1#3
+    set_n = 1
 
     path = p + f"main_{set_n}/"
 
     path = p + f"Experiment_{set_n}/"
-    # path = p + f"FinalExperiment_{set_n}/"
     
     TestData = AnalyseTestLapData()
     TestData.explore_folder(path)
-
-    
-
 
 
 if __name__ == '__main__':

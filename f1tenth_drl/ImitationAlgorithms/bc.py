@@ -8,23 +8,6 @@ from f1tenth_drl.Utils.Networks import DoublePolicyNet
 import time
 import os
 
-EXPLORE_NOISE = 0.1
-
-
-# class BCNetwork(nn.Module):
-#     def __init__(self, input_size, output_size):
-#         super(BCNetwork, self).__init__()
-#         self.fc = nn.Sequential(
-#             nn.Linear(input_size, 128),  # input_size should be 60
-#             nn.ReLU(),
-#             nn.Linear(128, 64),
-#             nn.ReLU(),
-#             nn.Linear(64, output_size)
-#         )
-
-#     def forward(self, x):
-#         return self.fc(x)
-    
 
 class TrainBC:
     def __init__(self, history_files, actions_files):
@@ -35,11 +18,11 @@ class TrainBC:
     def reintialize(self):
         self.model = DoublePolicyNet(self.scans.shape[1], self.actions.shape[1])
         self.criterion = nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.005) #0.005
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.0012) #0.005 #0.001
         
 
     def train(self):
-        epochs=6000 #3000
+        epochs=3000 #6000
         batch_size=64 #64
 
         history_tensor = torch.tensor(self.scans, dtype=torch.float32)
@@ -103,7 +86,9 @@ class TrainBC:
 
 class TestBC:
     def __init__(self):
-        self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth')
+        #self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_gbr_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth') # Experiment 1
+        #self.actor = torch.load('Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth') # Experiment 2
+        self.actor = torch.load('Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth') # Experiment 3
 
 
     def act(self, state):
@@ -118,7 +103,7 @@ if __name__ == "__main__":
     actions_file = []
 
     # Choose number of laps to train on
-    num_laps = 10#3
+    num_laps = 3#3
 
     # Choose which maps to train on # All maps: ['mco', 'aut', 'gbr', 'esp']
     map_list = ['gbr']
@@ -152,7 +137,14 @@ if __name__ == "__main__":
 
     agent = TrainBC(history_file, actions_file)
     agent.train()
-    agent.save(f'Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
+    # Experiment 1
+    #agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
+
+    # Experiment 2
+    agent.save(f'Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
+
+    # Experiment 3
+    #agent.save(f'Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
 
     time_end = time.time()
     print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")

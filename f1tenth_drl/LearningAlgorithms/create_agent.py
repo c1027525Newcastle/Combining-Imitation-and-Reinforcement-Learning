@@ -21,7 +21,7 @@ def create_test_agent(filename, directory, run_dict):
     elif run_dict.algorithm == "BC":
         agent = TestBC()
     elif run_dict.algorithm == "BCTD3":
-        agent = TestBCTD3()
+        agent = TestBCTD3(filename, directory)
     else: raise ValueError(f"Algorithm {run_dict.algorithm} not recognised")
     
     return agent

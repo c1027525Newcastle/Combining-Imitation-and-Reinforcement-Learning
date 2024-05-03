@@ -3,19 +3,19 @@ planner_type: "AgentOff"
 
 n_repeats: 2
 start_n: 1
-set_n: 1
+set_n: 1 #1
 
 random_seed: 100
 max_speed: 8
 n_waypoints: 10
 num_beams: 20
 
-training_steps: 30000 ## Change training step to 60,000
+training_steps: 300000 ## Change training step to 60,000
 
-n_test_laps: 100 #20 ####
+n_test_laps: 20 ####
 
 ## TEST
-algorithm: "TD3"
+algorithm: "BC"
 id_name: "Cth"
 map_name: "gbr"
 

@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, PercentFormatter
@@ -6,85 +5,35 @@ from matplotlib.ticker import MultipleLocator, PercentFormatter
 from f1tenth_drl.Utils.utils import *
 from f1tenth_drl.DataTools.plotting_utils import *
 
-
-
 def make_training_laptimes_plot():
-    set_number = 1
-    # base_path = f"Data/FinalExperiment_{set_number}/"
-    base_path = f"Data/Experiment_{set_number}/"
-    vehicle_keys = ["Game"]
-    labels = ["Full planning", "Trajectory tracking", "End-to-end"]
+    # Define the specific path to the file
+    path = "Data/Experiment_1/AgentOff_TD3_Game_gbr_Cth_8_1_1/"
     
-    # map_list = ["gbr"]
-    map_name = "gbr"
-    # map_name = "mco"
-    # algorithm = "SAC"
-    # algorithm = "TD3"
-    algorithm_list = ["TD3"]
+    # Load data from CSV
+    rewards, lengths, progresses, _ = load_csv_data(path)
     
-    max_speed = 8
-    general_id = "Cth"
-    n_repeats = 3
-    n_train_steps = 60
-
-    fig, axs = plt.subplots(2, 3, figsize=(5.3, 2.8), sharey=True, sharex=True)
+    # Calculate cumulative steps in kilometers
+    steps = np.cumsum(lengths) / 1000
     
-    for a_n, algorithm in enumerate(algorithm_list):
-        steps_list = []
-        lap_time_list = []
-        for a, vehicle_key in enumerate(vehicle_keys):
-            steps_list.append([])
-            lap_time_list.append([])
-            for j in range(n_repeats):
-                path = base_path + f"AgentOff_{algorithm}_{vehicle_key}_{map_name}_{general_id}_{max_speed}_{set_number}_{1}/"
-                rewards, lengths, progresses, _ = load_csv_data(path)
-                steps = np.cumsum(lengths) / 1000
-                
-                lap_times, completed_steps = [], []
-                for z in range(len(progresses)):
-                    if progresses[z] > 99:
-                        lap_times.append(lengths[z]/10)
-                        completed_steps.append(steps[z])
-                        
-                steps_list[a].append(completed_steps)
-                lap_time_list[a].append(lap_times)
-
-        for itteration in range(n_repeats):
-            for i in range(len(steps_list)):
-                colour_i = i
-                axs[a_n, i].plot(steps_list[i][itteration], lap_time_list[i][itteration], '.', color=color_pallet[colour_i], markersize=5, label=labels[i], alpha=0.6, linewidth=2)
-
-
-
-    for z in range(3):
-        axs[0, z].grid(True, axis='both')
-        axs[1, z].grid(True, axis='both')
-        axs[0, z].set_title(labels[z], size=11)
-        axs[0, z].text(48, 86, "SAC", fontdict={'fontsize': 10, 'fontweight':'bold'}, ha='center', bbox=dict(facecolor='white', alpha=0.99, boxstyle='round,pad=0.15', edgecolor='gainsboro'))
-        axs[1, z].text(48, 86, "TD3", fontdict={'fontsize': 10, 'fontweight':'bold'}, ha='center', bbox=dict(facecolor='white', alpha=0.99, boxstyle='round,pad=0.15', edgecolor='gainsboro'))
-
-
-    axs[1, 1].set_xlabel("Training Steps (x1000)")
-    # plt.title(f"{map_name.upper()}", size=10)
-    plt.xlim(0, n_train_steps)
-    plt.ylim(30, 100)
-    plt.grid(True)
-    plt.gca().yaxis.set_major_locator(MultipleLocator(20))
-
-    axs[1, 0].set_ylabel("Lap times (s)")
-    axs[0, 0].set_ylabel("Lap times (s)")
-    # h, l = plt.gca().get_legend_handles_labels()
-    # fig.legend(h, l, loc='lower center', bbox_to_anchor=(0.5, 0.9), ncol=3)
-    # fig.legend(h[:3], l[:3], loc='lower center', bbox_to_anchor=(0.5, 0.9), ncol=3)
+    # Initialize lists to collect lap times and corresponding step counts
+    lap_times, completed_steps = [], []
+    for i, progress in enumerate(progresses):
+        if progress > 99:  # Check if the lap was completed
+            lap_times.append(lengths[i]/10)  # Convert deciseconds to seconds
+            completed_steps.append(steps[i])
     
-    name = f"{base_path}Imgs/TrainingLapTimesAlgorithms_{set_number}"
+    # Create plot
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(completed_steps, lap_times, '.', color=color_pallet[0], markersize=5, label='TD3', alpha=0.6, linewidth=2)
+    
+    # Customize plot appearance
+    ax.set_title("Lap times over Training Steps", size=15)
+    ax.set_xlabel("Training Steps (x1000)")
+    ax.set_ylabel("Lap times (s)")
+    ax.grid(True)
+    ax.yaxis.set_major_locator(MultipleLocator(20))
+    ax.legend()
+
     plt.show()
-    std_img_saving(name)
-
-
-
-
 
 make_training_laptimes_plot()
-
-

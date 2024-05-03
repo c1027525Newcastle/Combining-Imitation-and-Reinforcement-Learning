@@ -145,6 +145,7 @@ def load_csv_data(path):
     rewards, lengths, progresses, laptimes = [], [], [], []
     with open(f"{path}training_data_episodes.csv", "r") as f:
         reader = csv.reader(f)
+        next(reader)#TODO:L
         for row in reader:
             if float(row[2]) > 0:
                 rewards.append(float(row[1]))

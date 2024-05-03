@@ -37,7 +37,13 @@ class TrainBCTD3:
         self.replay_buffer = OffPolicyBuffer(state_dim, action_dim)
 
         # Initialize the BC model and choose the percentage of times it affects TD3 during training
-        self.imitation_model = torch.load('Data/Experiment_1/AgentOff_BC_Game_mco_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth')
+        #Experiment 1
+        #self.imitation_model = torch.load('Data/Experiment_1/AgentOff_BC_Game_gbr_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth')
+        #Experiment 2
+        #self.imitation_model = torch.load('Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
+        #Experiment 3
+        self.imitation_model = torch.load('Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
+
         self.imitation_probability = 0.05
 
     def act(self, state, noise=EXPLORE_NOISE):

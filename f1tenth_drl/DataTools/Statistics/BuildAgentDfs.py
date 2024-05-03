@@ -5,9 +5,6 @@ import os
 
 from PIL import Image
 import glob
-#import trajectory_planning_helpers as tph
-#from matplotlib.ticker import PercentFormatter
-#from matplotlib.collections import LineCollection
 
 from f1tenth_drl.DataTools.MapData import MapData
 from f1tenth_drl.Planners.TrackLine import TrackLine
@@ -71,8 +68,13 @@ def create_main_agent_df(agent_path, test_laps=20):
                     continue
                 progress = 1 # it is finished
 
-            agent_data.append({"Lap": i, "TestMap": testing_map, "Distance": total_distance, "Progress": progress, "Time": time, "MeanVelocity": avg_velocity})
+            total_distance = "{:.2f}".format(total_distance)
+            progress = "{:.2f}".format(progress)
+            time = "{:.2f}".format(time)
+            avg_velocity = "{:.3f}".format(avg_velocity)
 
+            agent_data.append({"Lap": i, "TestMap": testing_map, "Distance": total_distance, "Progress": progress, "Time": time, "MeanVelocity": avg_velocity})
+            
     agent_df = pd.DataFrame(agent_data)
     agent_df.to_csv(agent_path + "MainAgentData.csv", index=False)
 

@@ -9,13 +9,13 @@ from f1tenth_drl.DataTools.plotting_utils import *
 
 set_number = 1
 map_name = "gbr"
-algorithm = "SAC"
+algorithm = "TD3"
 rep_number = 0
-base = f"Data/FinalExperiment_{set_number}/"
+base = f"Data/Experiment_{set_number}/"
 names = ["Full planning", "Trajectory tracking", "End-to-end", "Classic"]
 
 
-lap_n = 4
+lap_n = 1
 lap_list = np.ones(4, dtype=int) * lap_n
 
 
@@ -121,14 +121,6 @@ def slip_distributions():
     plt.tight_layout()
     name = f"{base}Imgs/SlipDistributions{map_name.upper()}_Lap{lap_n}"
     std_img_saving(name, True)
-
-
-
-# speed_profile_comparison()
-# plt.clf()
-# speed_profile_deviation()
-# plt.clf()
-# speed_distributions()
 
 
 slip_distributions()
