@@ -112,7 +112,7 @@ class AnalyseTestLapData:
         line = plt.gca().add_collection(lc)
         cbar = plt.colorbar(line,fraction=0.046, pad=0.04, shrink=0.99)
         cbar.ax.tick_params(labelsize=25)
-        cbar.set_label('Speed (m/s)', rotation=270, labelpad=15) # TODO: L added this
+        cbar.set_label('Velocity (m/s)', rotation=270, labelpad=15) # TODO: L added this
         plt.gca().set_aspect('equal', adjustable='box')
 
         plt.tight_layout()

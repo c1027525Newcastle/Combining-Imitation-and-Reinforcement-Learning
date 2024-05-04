@@ -106,48 +106,49 @@ if __name__ == "__main__":
     num_laps = 3#3
 
     # Choose which maps to train on # All maps: ['mco', 'aut', 'gbr', 'esp']
-    map_list = ['gbr']
-    try:
-        for map_name in map_list:
-            for lap_num in range(0, num_laps):
-                if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
-                    # Code to reduce the size of history and actions files so that we can train faster on the beggining of the laps
-                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-                    # cutt_off = int(len(history) * 0.8)
-                    # reduced_history = history[:cutt_off]
-                    # reduced_actions = actions[:cutt_off]
-                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
-                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
+    # map_list = ['gbr']
+    # try:
+    #     for map_name in map_list:
+    #         for lap_num in range(0, num_laps):
+    #             if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
+    #                 # Code to reduce the size of history and actions files so that we can train faster on the beggining of the laps
+    #                 # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+    #                 # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+    #                 # cutt_off = int(len(history) * 0.8)
+    #                 # reduced_history = history[:cutt_off]
+    #                 # reduced_actions = actions[:cutt_off]
+    #                 # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
+    #                 # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
 
-                    history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-                    actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+    #                 history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+    #                 actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
 
-                    # Code to check shapes of history and actions
-                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-                    # print(f'History shape: {history.shape}')
-                    # print(f'Actions shape: {actions.shape}')
-                else:
-                    break
-    except FileNotFoundError:
-        print('Files for database not found')
+    #                 # Code to check shapes of history and actions
+    #                 # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+    #                 # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+    #                 # print(f'History shape: {history.shape}')
+    #                 # print(f'Actions shape: {actions.shape}')
+    #             else:
+    #                 break
+    # except FileNotFoundError:
+    #     print('Files for database not found')
 
-    time_start = time.time()
+    # time_start = time.time()
 
-    agent = TrainBC(history_file, actions_file)
-    agent.train()
-    # Experiment 1
-    #agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
+    # agent = TrainBC(history_file, actions_file)
+    # agent.train()
+    
+    # # Experiment 1
+    # #agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
 
-    # Experiment 2
-    agent.save(f'Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
+    # # Experiment 2
+    # #agent.save(f'Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
 
-    # Experiment 3
-    #agent.save(f'Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
+    # # Experiment 3
+    # #agent.save(f'Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
 
-    time_end = time.time()
-    print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
+    # time_end = time.time()
+    # print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
 
     # Code to check shapes of history and actions files
     # actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
