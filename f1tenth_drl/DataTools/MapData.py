@@ -4,10 +4,10 @@ import csv, yaml
 from PIL import Image
 from matplotlib.collections import LineCollection
 
+
 class MapData:
     def __init__(self, map_name):
         self.path = "maps/"
-        # self.path = "map_data/"
         self.map_name = map_name
 
         self.xs, ys = None, None
@@ -26,6 +26,7 @@ class MapData:
             self.load_raceline()
         except: pass
 
+
     def load_map_img(self):
         with open(self.path + self.map_name + ".yaml", 'r') as file:
             map_yaml_data = yaml.safe_load(file)
@@ -42,6 +43,7 @@ class MapData:
         self.map_height = self.map_img.shape[0]
         self.map_width = self.map_img.shape[1]
         
+
     def load_centerline(self):
         xs, ys = [], []
         # with open(self.path + self.map_name + "_std.csv", 'r') as file:
@@ -59,6 +61,7 @@ class MapData:
 
         self.N = len(xs)
 
+
     def load_raceline(self):
         ss, xs, ys, thetas, ks, vs, accs = [], [], [], [], [], [], []
 
@@ -74,7 +77,6 @@ class MapData:
             thetas.append(float(lines[3]))
             ks.append(float(lines[4]))
             vs.append(float(lines[5]))
-            # accs.append(float(lines[6]))
 
         self.t_ss = np.array(ss)
         self.t_xs = np.array(xs)
@@ -82,19 +84,22 @@ class MapData:
         self.t_ths = np.array(thetas)
         self.t_ks = np.array(ks)
         self.t_vs = np.array(vs)
-        # self.t_accs = np.array(accs)
+
 
     def xy2rc(self, xs, ys):
         xs = (xs - self.map_origin[0]) / self.map_resolution
         ys = (ys - self.map_origin[1]) /self.map_resolution
         return xs, ys
 
+
     def pts2rc(self, pts):
         return self.xy2rc(pts[:,0], pts[:,1])
     
+
     def plot_centre_line(self):
         xs, ys = self.xy2rc(self.xs, self.ys)
         plt.plot(xs, ys, '--', color='black', linewidth=1)
+
 
     def plot_race_line(self):
         xs, ys = self.xy2rc(self.t_xs, self.t_ys)
@@ -109,6 +114,7 @@ class MapData:
         line = plt.gca().add_collection(lc)
         plt.colorbar(line, fraction=0.046, pad=0.04, shrink=0.99)
 
+
     def plot_map_img(self):
         if len(self.map_img.shape) > 2:
             self.map_img = self.map_img.astype(np.uint8)[:, :, 0]
@@ -118,6 +124,7 @@ class MapData:
         self.map_img[0, 0] = 0
         plt.imshow(self.map_img, origin='lower', cmap='gray')
 
+
     def plot_map_img_transpose(self):
         if len(self.map_img.shape) > 2:
             self.map_img = self.map_img.astype(np.uint8)[:, :, 0]
@@ -126,6 +133,7 @@ class MapData:
         self.map_img[0, 1] = 255
         self.map_img[0, 0] = 0
         plt.imshow(self.map_img.T, origin='lower', cmap='gray')
+
 
     def plot_map_trajectory_data(self):
         plt.figure(figsize=(10, 5))
@@ -137,6 +145,7 @@ class MapData:
         plt.tight_layout()
         plt.savefig("map_data/" + self.map_name + "_speeds.svg")
 
+
     def plot_map_trajectory_data(self):
         plt.figure(figsize=(10, 5))
         plt.plot(self.t_ks)
@@ -147,6 +156,7 @@ class MapData:
         plt.tight_layout()
         plt.savefig("map_data/" + self.map_name + "_curvatures.svg")
 
+
     def plot_map_data(self):
         self.plot_map_img()
 
@@ -155,20 +165,18 @@ class MapData:
         self.plot_race_line()
 
         plt.savefig("map_data/" + self.map_name + "_map.svg")
-        # plt.show()
 
         self.plot_map_trajectory_data()
 
 
-
+#TODO: L remove this
 def main():
     map_name = "CornerHall"
-    # map_name = "esp"
 
     map_data = MapData(map_name)
     map_data.plot_map_data()
     plt.show()
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     main()

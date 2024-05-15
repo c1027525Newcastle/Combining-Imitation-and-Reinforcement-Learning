@@ -6,9 +6,6 @@ from f1tenth_drl.Planners.TrackLine import TrackLine
 from f1tenth_drl.Utils.utils import *
 import pandas as pd
 
-SAVE_PDF = False
-# SAVE_PDF = True # TODO: L why is this here
-
 
 def ensure_path_exists(folder):
     if not os.path.exists(folder):
@@ -90,6 +87,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-

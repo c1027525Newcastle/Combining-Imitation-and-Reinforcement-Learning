@@ -6,15 +6,12 @@ import glob
 
 
 def std_img_saving(name, SavePDF=True):
-
     plt.rcParams['pdf.use14corefonts'] = True
 
     plt.tight_layout()
-    # plt.grid(True)
     plt.savefig(name + ".svg", bbox_inches='tight', pad_inches=0)
     if SavePDF:
         plt.savefig(name + ".pdf", bbox_inches='tight', pad_inches=0.02)
-
 
 
 def load_time_data(folder, map_name=""):
@@ -38,6 +35,7 @@ def load_time_data(folder, map_name=""):
 
     return mins, maxes, means
 
+
 def load_data_mean_std(folder, map_name=""):
     files = glob.glob(folder + f"Results_*{map_name}*.txt")
     files.sort()
@@ -56,6 +54,7 @@ def load_data_mean_std(folder, map_name=""):
                 stds[keys[j]].append(float(lines[2].split(",")[1+j]))
 
     return means, stds
+
 
 def load_data_mean_std(folder, map_name=""):
     files = glob.glob(folder + f"Results_*{map_name}*.txt")
@@ -78,15 +77,6 @@ def load_data_mean_std(folder, map_name=""):
 
 
 def load_repetition_data(folder, map_name=""):
-    """loads the data for a repetition set
-
-    Args:
-        folder (path): path to a folder
-        map_name (str, optional): describes the specific result. Defaults to "".
-
-    Returns:
-        _type_: _description_
-    """
     files = glob.glob(folder + f"RepetitionSummary_*{map_name}*.txt")
     try:
         file_name = files[0]
@@ -113,6 +103,7 @@ def load_repetition_data(folder, map_name=""):
                            
     return times, successes, progresses
 
+
 def load_detail_mean_std(folder, map_name=""):
     file = folder + f"DetailSummaryStatistics{map_name.upper()}.txt"
     keys = ["time", "progress", "distance", "avg_speed", "std_speed", "avg_lateral", "std_lateral", "avg_speedD", "std_speedD", "avg_curvature", "std_curvature"]
@@ -131,17 +122,6 @@ def load_detail_mean_std(folder, map_name=""):
 
 
 def load_csv_data(path):
-    """loads data from a csv training file
-
-    Args:   
-        path (file_path): path to the agent
-
-    Returns:
-        rewards: ndarray of rewards
-        lengths: ndarray of episode lengths
-        progresses: ndarray of track progresses
-        laptimes: ndarray of laptimes
-    """
     rewards, lengths, progresses, laptimes = [], [], [], []
     with open(f"{path}training_data_episodes.csv", "r") as f:
         reader = csv.reader(f)
@@ -160,11 +140,12 @@ def load_csv_data(path):
     
     return rewards, lengths, progresses, laptimes
 
+
 def true_moving_average(data, period):
     if len(data) < period:
         return np.zeros_like(data)
     ret = np.convolve(data, np.ones(period), 'same') / period
-    for i in range(period): # start
+    for i in range(period):
         t = np.convolve(data, np.ones(i+2), 'valid') / (i+2)
         ret[i] = t[0]
     for i in range(period):
@@ -179,7 +160,7 @@ def true_moving_average_steps(x_data, y_data, period, nxs=1000):
     if len(y_data) < period:
         return np.zeros_like(y_data)
     y_return = np.convolve(y_data, np.ones(period), 'same') / period
-    for i in range(period): # start
+    for i in range(period):
         t = np.convolve(y_data, np.ones(i+2), 'valid') / (i+2)
         y_return[i] = t[0]
     for i in range(period):
@@ -192,11 +173,6 @@ def true_moving_average_steps(x_data, y_data, period, nxs=1000):
 
 
 def convert_to_min_max_avg(step_list, progress_list, xs):
-    """Returns the 3 lines 
-        - Minimum line
-        - maximum line 
-        - average line 
-    """ 
     n = len(step_list)
 
     ys = np.zeros((n, len(xs)))
@@ -208,6 +184,7 @@ def convert_to_min_max_avg(step_list, progress_list, xs):
     avg_line = np.mean(ys, axis=0)
 
     return min_line, max_line, avg_line
+
 
 def smooth_line(steps, progresses, length_xs=300):
     xs = np.linspace(steps[0], steps[-1], length_xs)
@@ -236,6 +213,7 @@ plot_green = "#2ECC71"
 plot_red = "#E74C3C"
 plot_blue = "#3498DB"
 
+
 def plot_error_bars(x_base, mins, maxes, dark_color, w, tails=True):
     for i in range(len(x_base)):
         xs = [x_base[i], x_base[i]]
@@ -247,6 +225,7 @@ def plot_error_bars(x_base, mins, maxes, dark_color, w, tails=True):
             y2 = [maxes[i], maxes[i]]
             plt.plot(xs, y1, color=dark_color[i], linewidth=2)
             plt.plot(xs, y2, color=dark_color[i], linewidth=2)
+
 
 def plot_error_bars_single_colour(x_base, mins, maxes, dark_color, w, tails=True):
     for i in range(len(x_base)):
@@ -261,7 +240,6 @@ def plot_error_bars_single_colour(x_base, mins, maxes, dark_color, w, tails=True
             plt.plot(xs, y2, color=dark_color, linewidth=2)
 
 
-
 def plot_color_pallet(pp, name="None"):
     plt.figure(figsize=(10, 1))
     plt.axis('off')
@@ -270,10 +248,9 @@ def plot_color_pallet(pp, name="None"):
         
     plt.tight_layout
     plt.savefig(f"Data/Imgs/Pallets/color_pallet_{name}.svg", bbox_inches='tight', pad_inches=0)
-    # plt.show()
-    
+
+
 science_pallet = ['#0C5DA5', '#FF2C00', '#00B945', '#FF9500', '#845B97', '#474747', '#9e9e9e']
-# science_pallet = ['#0C5DA5', '#00B945', '#FF9500', '#FF2C00', '#845B97', '#474747', '#9e9e9e']
 color_blind_pallet = ["#c1272d", "#0000a7", "#eecc16", "#008176", "#b3b3b3"]
     
 science_bright = ['EE7733', '0077BB', '33BBEE', 'EE3377', 'CC3311', '009988', 'BBBBBB']
@@ -287,6 +264,7 @@ science_high_vis = [f"#{c}" for c in science_high_vis]
 google = ["#008744", "#0057e7", "#d62d20", "#ffa700"]
 
 color_pallet = science_pallet
+
 
 if __name__ == '__main__':
     plot_color_pallet(pp, "std")

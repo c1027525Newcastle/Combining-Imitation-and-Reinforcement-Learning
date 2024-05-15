@@ -1,4 +1,3 @@
-from f1tenth_drl.Utils.utils import init_file_struct
 from f1tenth_drl.LearningAlgorithms.create_agent import create_test_agent
 import numpy as np
 from f1tenth_drl.Planners.Architectures import select_architecture

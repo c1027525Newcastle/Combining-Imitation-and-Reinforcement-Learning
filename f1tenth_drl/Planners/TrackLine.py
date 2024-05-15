@@ -1,7 +1,8 @@
 import csv
 import numpy as np
-import  matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from numba import njit
+
 
 class TrackLine:
     def __init__(self, map_name, racing_line=False, expand=False) -> None:
@@ -25,6 +26,7 @@ class TrackLine:
 
         self.max_distance = 0
         self.distance_allowance = 1
+
 
     def load_centerline(self):
         filename = 'maps/' + self.map_name + '_centerline.csv'
@@ -84,6 +86,7 @@ class TrackLine:
         self.diffs = self.wpts[1:,:] - self.wpts[:-1,:]
         self.l2s   = self.diffs[:,0]**2 + self.diffs[:,1]**2
     
+
     def load_raceline(self):
         track = []
         filename = 'maps/' + self.map_name + "_raceline.csv"
@@ -102,6 +105,7 @@ class TrackLine:
         seg_lengths = np.linalg.norm(np.diff(self.wpts, axis=0), axis=1)
         self.ss = np.insert(np.cumsum(seg_lengths), 0, 0)
     
+
     def _expand_wpts(self):
         n = 5 # number of pts per orig pt 
         dz = 1 / n
@@ -130,6 +134,7 @@ class TrackLine:
         plt.gca().set_aspect('equal', adjustable='box')
         plt.show()
     
+
     def get_raceline_speed(self, point):
         idx, dists = self.get_trackline_segment(point)
         d1 = dists[idx]
@@ -138,6 +143,7 @@ class TrackLine:
         speed = self.vs[idx] * d1/d_total + self.vs[idx+1] *d2 / d_total
         return speed
     
+
     def interp_speed(self, idx, dists):
         d1 = dists[idx]
         d2 = dists[idx+1]
@@ -145,6 +151,7 @@ class TrackLine:
         speed = self.vs[idx] * d1/d_total + self.vs[idx+1] *d2 / d_total
         return speed
     
+
     def get_lookahead_point(self, position, lookahead_distance):
         wpts = np.vstack((self.wpts[:, 0], self.wpts[:, 1])).T
         nearest_point, nearest_dist, t, i = nearest_point_on_trajectory_py2(position, wpts, self.l2s, self.diffs)
@@ -162,6 +169,7 @@ class TrackLine:
         
         return lookahead_point
 
+
     def calculate_progress(self, point):
         idx, dists = self.get_trackline_segment(point)
 
@@ -171,30 +179,25 @@ class TrackLine:
         
         return s
 
+
     def calculate_progress_percent(self, point):
         s = self.calculate_progress(point)
         s_percent = s/self.total_s
         
         return s_percent
 
+
     def interp_pts(self, idx, dists):
-        """
-        Returns the distance along the trackline and the height above the trackline
-        Finds the reflected distance along the line joining wpt1 and wpt2
-        Uses Herons formula for the area of a triangle
-        
-        """
         d_ss = self.ss[idx+1] - self.ss[idx]
         d1, d2 = dists[idx], dists[idx+1]
 
-        if d1 < 0.01: # at the first point
+        if d1 < 0.01:
             x = 0   
             h = 0
-        elif d2 < 0.01: # at the second point
-            x = dists[idx] # the distance to the previous point
-            h = 0 # there is no distance
-        else: 
-            # if the point is somewhere along the line
+        elif d2 < 0.01:
+            x = dists[idx]
+            h = 0 
+        else:
             s = (d_ss + d1 + d2)/2
             Area_square = (s*(s-d1)*(s-d2)*(s-d_ss))
             Area = Area_square**0.5
@@ -205,14 +208,8 @@ class TrackLine:
 
         return x, h
 
+
     def get_trackline_segment(self, point):
-        """Returns the first index representing the line segment that is closest to the point.
-
-        wpt1 = pts[idx]
-        wpt2 = pts[idx+1]
-
-        dists: the distance from the point to each of the wpts.
-        """
         dists = np.linalg.norm(point - self.wpts, axis=1)
 
         min_dist_segment = np.argmin(dists)
@@ -226,6 +223,7 @@ class TrackLine:
         else: 
             return min_dist_segment - 1, dists
 
+
     def get_cross_track_heading(self, point):
         idx, dists = self.get_trackline_segment(point)
         point_diff = self.wpts[idx+1, :] - self.wpts[idx, :]
@@ -234,6 +232,7 @@ class TrackLine:
         x, h = self.interp_pts(idx, dists)
 
         return trackline_heading, h
+
 
     def plot_vehicle(self, point, theta):
         idx, dists = self.get_trackline_segment(point)
@@ -259,6 +258,7 @@ class TrackLine:
 
         plt.pause(0.0001)
 
+
     def check_done(self, observation):
         position = observation['state'][0:2]
         s = self.calculate_progress(position)
@@ -273,31 +273,15 @@ class TrackLine:
 
 @njit(fastmath=False, cache=True)
 def nearest_point_on_trajectory_py2(point, trajectory, l2s, diffs):
-    '''
-    Return the nearest point along the given piecewise linear trajectory.
-
-    Same as nearest_point_on_line_segment, but vectorized. This method is quite fast, time constraints should
-    not be an issue so long as trajectories are not insanely long.
-
-        Order of magnitude: trajectory length: 1000 --> 0.0002 second computation (5000fps)
-
-    point: size 2 numpy array
-    trajectory: Nx2 matrix of (x,y) trajectory waypoints
-        - these must be unique. If they are not unique, a divide by 0 error will destroy the world
-    '''
     diffs = trajectory[1:,:] - trajectory[:-1,:]
     l2s   = diffs[:,0]**2 + diffs[:,1]**2
-    # this is equivalent to the elementwise dot product
-    # dots = np.sum((point - trajectory[:-1,:]) * diffs[:,:], axis=1)
     dots = np.empty((trajectory.shape[0]-1, ))
     for i in range(dots.shape[0]):
         dots[i] = np.dot((point - trajectory[i, :]), diffs[i, :])
     t = dots / l2s
     t[t<0.0] = 0.0
     t[t>1.0] = 1.0
-    # t = np.clip(dots / l2s, 0.0, 1.0)
     projections = trajectory[:-1,:] + (t*diffs.T).T
-    # dists = np.linalg.norm(point - projections, axis=1)
     dists = np.empty((projections.shape[0],))
     for i in range(dists.shape[0]):
         temp = point - projections[i]
@@ -307,12 +291,6 @@ def nearest_point_on_trajectory_py2(point, trajectory, l2s, diffs):
 
 @njit(fastmath=False, cache=True)
 def first_point_on_trajectory_intersecting_circle(point, radius, trajectory, t=0.0, wrap=False):
-    ''' starts at beginning of trajectory, and find the first point one radius away from the given point along the trajectory.
-
-    Assumes that the first segment passes within a single radius of the point
-
-    http://codereview.stackexchange.com/questions/86421/line-segment-to-circle-collision-algorithm
-    '''
     start_i = int(t)
     start_t = t % 1.0
     first_t = None
@@ -331,9 +309,7 @@ def first_point_on_trajectory_intersecting_circle(point, radius, trajectory, t=0
 
         if discriminant < 0:
             continue
-        #   print "NO INTERSECTION"
-        # else:
-        # if discriminant >= 0.0:
+
         discriminant = np.sqrt(discriminant)
         t1 = (-b - discriminant) / (2.0*a)
         t2 = (-b + discriminant) / (2.0*a)
@@ -358,7 +334,7 @@ def first_point_on_trajectory_intersecting_circle(point, radius, trajectory, t=0
             first_i = i
             first_p = start + t2 * V
             break
-    # wrap around to the beginning of the trajectory if no intersection is found1
+    
     if wrap and first_p is None:
         for i in range(-1, start_i):
             start = trajectory[i % trajectory.shape[0],:]
@@ -388,13 +364,14 @@ def first_point_on_trajectory_intersecting_circle(point, radius, trajectory, t=0
 
     return first_p, first_i, first_t
 
+
 @njit(fastmath=True, cache=True)
 def add_locations(x1, x2, dx=1):
-    # dx is a scaling factor
     ret = np.array([0.0, 0.0])
     for i in range(2):
         ret[i] = x1[i] + x2[i] * dx
     return ret
+
 
 @njit(fastmath=True, cache=True)
 def sub_locations(x1=[0, 0], x2=[0, 0], dx=1):

@@ -4,8 +4,7 @@ from numba import njit
 import numpy as np
 import cProfile
 import pstats
-import io
-from pstats import SortKey
+
 
 def init_file_struct(path):
     if os.path.exists(path):
@@ -30,6 +29,7 @@ def load_conf(fname):
 
     return conf 
 
+
 def load_run_dict(full_path):
     with open(full_path) as file:
         run_dict = yaml.load(file, Loader=yaml.FullLoader)
@@ -46,11 +46,13 @@ def generate_test_name(file_name):
     os.makedirs(f"Data/{file_name}_{n}")
     return file_name + f"_{n}"
 
+
 def latest_test_name(file_name):
     n = 1
     while os.path.exists(f"Data/{file_name}_{n}"):
         n += 1
     return file_name + f"_{n-1}"
+
 
 def setup_run_list(experiment_file, new_run=True):
     full_path =  "experiments/" + experiment_file + '.yaml'
@@ -99,21 +101,23 @@ def calculate_speed(delta, f_s=0.8, max_v=7):
 
     return V
 
+
 def save_csv_array(data, filename):
     with open(filename, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(data)
 
+
 def moving_average(data, period):
     return np.convolve(data, np.ones(period), 'same') / period
+
 
 def true_moving_average(data, period):
     if len(data) < period:
         return np.zeros_like(data)
     ret = np.convolve(data, np.ones(period), 'same') / period
-    # t_end = np.convolve(data, np.ones(period), 'valid') / (period)
-    # t_end = t_end[-1] # last valid value
-    for i in range(period): # start
+
+    for i in range(period):
         t = np.convolve(data, np.ones(i+2), 'valid') / (i+2)
         ret[i] = t[0]
     for i in range(period):
@@ -126,7 +130,6 @@ def save_run_config(run_dict, path):
     path = path +  f"/TrainingRunDict_record.yaml"
     with open(path, 'w') as file:
         yaml.dump(run_dict, file)
-
 
     
 def profile_and_save(function):

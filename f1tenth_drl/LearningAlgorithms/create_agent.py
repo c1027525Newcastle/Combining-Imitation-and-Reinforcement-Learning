@@ -1,7 +1,6 @@
 from f1tenth_drl.LearningAlgorithms.td3 import TestTD3, TrainTD3
 from f1tenth_drl.LearningAlgorithms.bctd3 import TestBCTD3, TrainBCTD3
-from f1tenth_drl.ImitationAlgorithms.bc import TestBC, TrainBC
-import numpy as np
+from f1tenth_drl.ImitationAlgorithms.bc import TestBC
 
 
 def create_train_agent(run_dict, state_dim):

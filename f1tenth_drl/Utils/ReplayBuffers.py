@@ -1,8 +1,8 @@
 import torch
 import numpy as np
 
-
 MEMORY_SIZE = 100000
+
 
 class OffPolicyBuffer(object):
     def __init__(self, state_dim, action_dim):     

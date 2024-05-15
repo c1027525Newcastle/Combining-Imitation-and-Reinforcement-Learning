@@ -1,6 +1,3 @@
-import yaml
-from argparse import Namespace #TODO: L remove this most likely
-import os 
 import numpy as np
 
 from f1tenth_drl.f1tenth_gym import F110Env
@@ -92,4 +89,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-

@@ -2,7 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from f1tenth_drl.Utils.utils import *
 
-
 SIZE = 20000
 
 

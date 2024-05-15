@@ -1,6 +1,7 @@
 import numpy as np
 import os
 
+
 class VehicleStateHistory:
     def __init__(self, run, folder):
         self.vehicle_name = run.run_name

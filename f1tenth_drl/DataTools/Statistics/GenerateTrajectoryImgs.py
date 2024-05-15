@@ -1,22 +1,19 @@
 from matplotlib import pyplot as plt
 plt.rcParams['pdf.use14corefonts'] = True
-from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 import numpy as np
 import glob
 import os
 
 import glob
-from matplotlib.ticker import PercentFormatter
 from matplotlib.collections import LineCollection
 
 from f1tenth_drl.DataTools.MapData import MapData
 from f1tenth_drl.Planners.TrackLine import TrackLine 
 from f1tenth_drl.Utils.utils import *
 from f1tenth_drl.DataTools.plotting_utils import *
-from matplotlib.ticker import MultipleLocator
 
-# SAVE_PDF = False
+
 SAVE_PDF = True
 
 vehicle_names = ["Classic", "Full Planning", "Trajectory tracking", "End-to-End"]

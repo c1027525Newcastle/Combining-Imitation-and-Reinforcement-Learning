@@ -1,6 +1,5 @@
 import numpy as np
 from f1tenth_drl.Planners.TrackLine import TrackLine
-from matplotlib import pyplot as plt
 
 
 def select_architecture(run, conf):

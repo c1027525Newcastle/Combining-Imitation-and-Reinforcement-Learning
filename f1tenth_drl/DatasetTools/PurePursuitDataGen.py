@@ -1,13 +1,5 @@
 """
-Partial code source: https://github.com/f1tenth/f1tenth_gym
-Example waypoint_follow.py from f1tenth_gym
-Specific function used:
-- nearest_point_on_trajectory_py2
-- first_point_on_trajectory_intersecting_circle
-- get_actuation
-
-Adjustments have been made
-
+Code modified from: https://github.com/f1tenth/f1tenth_gym
 """
 
 import numpy as np
@@ -48,7 +40,7 @@ class PurePursuitDataGen:
         steering_angle = np.clip(steering_angle, -self.max_steer, self.max_steer)
 
         speed = speed_raceline 
-        speed = min(speed, self.max_speed) # cap the speed
+        speed = min(speed, self.max_speed)
 
         action = np.array([steering_angle, speed])
         self.data_history.add_memory_entry(obs, action)
@@ -56,7 +48,7 @@ class PurePursuitDataGen:
         return action
 
     def done_callback(self, final_obs):
-        # TODO: L Only add the laps that are completed
+        # Add the laps that were completed only so BC learns from perfect data
         if bool(final_obs['collisions'][0]) == False:
             self.data_history.add_memory_entry(final_obs, np.array([0, 0]))
             self.data_history.save_history()
