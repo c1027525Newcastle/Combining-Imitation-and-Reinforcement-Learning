@@ -1,5 +1,5 @@
 import pandas as pd
-import seaborn as sns # TODO: L add this to requirements
+import seaborn as sns
 import matplotlib.pyplot as plt
 
 from f1tenth.DataTools.Statistics.MeanVelocityAndTimeOverLaps import open_file

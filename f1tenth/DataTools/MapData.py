@@ -167,16 +167,3 @@ class MapData:
         plt.savefig("map_data/" + self.map_name + "_map.svg")
 
         self.plot_map_trajectory_data()
-
-
-#TODO: L remove this
-def main():
-    map_name = "CornerHall"
-
-    map_data = MapData(map_name)
-    map_data.plot_map_data()
-    plt.show()
-
-
-if __name__ == '__main__':
-    main()

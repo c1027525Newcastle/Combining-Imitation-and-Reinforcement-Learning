@@ -15,14 +15,15 @@ class DataStateHistory:
     
         self.lap_n = 0
 
-        # TODO: L added this
+        # Use a matching architecture to TD3 to transform the observations and actions
         self.architecture = PlanningArchitectureBC(experiment.map_name)
 
     
     def add_memory_entry(self, obs, action):
-        # TODO: L changed this
-        transformed_state = self.architecture.transform_obs(obs)  # transform obs into the state using PlanningArchitecture logic
-        transformed_action = self.architecture.transform_action(action)  # transform action to match the used range
+        # Transform observation into the state using PlanningArchitecture logic
+        transformed_state = self.architecture.transform_obs(obs)  
+        # Transform action to match the used range
+        transformed_action = self.architecture.transform_action(action)  
         self.states.append(transformed_state)
         self.actions.append(transformed_action)
         self.scans.append(obs['scans'][0])
@@ -32,14 +33,12 @@ class DataStateHistory:
         actions = np.array(self.actions)
 
         scaler = MinMaxScaler(feature_range=(-1, 1))
-        actions = scaler.fit_transform(actions)#TODO: L added this
-        states = scaler.fit_transform(states)#TODO: L added this
+        # Scale both actions and states
+        actions = scaler.fit_transform(actions)
+        states = scaler.fit_transform(states)
 
-        lap_history = np.concatenate((states, actions), axis=1)
-        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_history.npy", states)#_history.npy", lap_history)
-        
-        scans = np.array(self.scans)
-        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_actions.npy", actions) #_scans.npy", scans)
+        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_history.npy", states)
+        np.save(self.path + f"{self.vehicle_name}_Lap_{self.lap_n}_actions.npy", actions)
         
         self.states = []
         self.actions = []

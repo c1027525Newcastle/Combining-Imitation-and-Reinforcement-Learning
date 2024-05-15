@@ -5,6 +5,7 @@ from f1tenth.f1tenth_gym import F110Env
 from f1tenth.Planners.AgentTrainer import AgentTrainer
 from f1tenth.Planners.AgentTester import AgentTester
 from f1tenth.Utils.utils import *
+from f1tenth.ImitationAlgorithms.bc import training_bc
 
 
 def run_simulation_loop_steps(env, planner, steps, steps_per_action=10):
@@ -56,7 +57,7 @@ def run_training_batch(experiment):
 
         env = F110Env(map=run_dict.map_name, num_agents=1)
         
-        # BC is trained in its own file so this functions needs only to run the testing part
+        # If the algorithm is not BC, then train the RL agents
         if run_dict.algorithm != "BC":
             # Added a way to allow interrupting training early to ease testing of code
             try:
@@ -75,7 +76,11 @@ def run_training_batch(experiment):
                 planner = AgentTester(run_dict, conf)
                 run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)
                 env.__del__()
+
         elif run_dict.algorithm == "BC":
+            print("Training BC")
+            training_bc(run_dict.epoch, run_dict.batch_size, run_dict.dataset_size, run_dict.set_n)
+
             print("Testing BC")
             planner = AgentTester(run_dict, conf)
             run_simulation_loop_laps(env, planner, run_dict.n_test_laps, 4)

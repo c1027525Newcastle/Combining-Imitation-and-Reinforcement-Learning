@@ -109,7 +109,8 @@ class AnalyseTestLapData:
         line = plt.gca().add_collection(lc)
         cbar = plt.colorbar(line,fraction=0.046, pad=0.04, shrink=0.99)
         cbar.ax.tick_params(labelsize=25)
-        cbar.set_label('Velocity (m/s)', rotation=270, labelpad=15) # TODO: L added this
+        # Add the label for the colorbar
+        cbar.set_label('Velocity (m/s)', rotation=270, labelpad=15)
         plt.gca().set_aspect('equal', adjustable='box')
 
         plt.tight_layout()
@@ -144,7 +145,7 @@ def mco_right_limits():
 def analyse_folder():
 
     p = "Data/"
-    set_n = 2
+    set_n = 1
 
     path = p + f"main_{set_n}/"
 

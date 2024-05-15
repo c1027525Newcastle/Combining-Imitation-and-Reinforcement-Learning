@@ -22,9 +22,9 @@ class TrainBC:
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001) #0.005 #0.001
         
 
-    def train(self):
-        epochs=3000 #6000
-        batch_size=64 #64
+    def train(self, epochs, batch_size):
+        # epochs=3000 #6000
+        # batch_size=64 #64
 
         history_tensor = torch.tensor(self.scans, dtype=torch.float32)
         actions_tensor = torch.tensor(self.actions, dtype=torch.float32)
@@ -86,16 +86,8 @@ class TrainBC:
 
 
 class TestBC:
-    def __init__(self):
-        exp_n = 1 #TODO: L change the name of the BC file to not include agent off and what not
-        # TODO: L ALSO MAYBE DEFINE exp_n in run_experiments.py and pass it as an argument to this class and others in bctd3 for ez
+    def __init__(self, exp_n):
         self.actor = torch.load(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_gbr_Cth_8_{exp_n}_1/AgentOff_BC_Game_gbr_Cth_8_{exp_n}_1_actor.pth') 
-        # Experiment 1
-        #self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_gbr_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth') 
-        # Experiment 2
-        #self.actor = torch.load('Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth') 
-        # Experiment 3
-        #self.actor = torch.load('Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
 
 
     def act(self, state):
@@ -103,6 +95,7 @@ class TestBC:
         action = self.actor(state).data.numpy().flatten()
         
         return action
+    
 
 def check_statistics():
     # Code to check shapes of history and actions files
@@ -125,31 +118,36 @@ def check_statistics():
     print(f"Max: {np.max(history, axis=0)}")
 
 
-def main():
+def reduce_data_size(map_name, num_laps):
+    for lap_num in range(0, num_laps):
+        if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
+            # Reduce the size of history and actions files so that we can train faster on the beggining of the laps
+            history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+            actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+            cutt_off = int(len(history) * 0.8)
+            reduced_history = history[:cutt_off]
+            reduced_actions = actions[:cutt_off]
+            np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
+            np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
+
+
+def training_bc(epochs, batch_size, dataset_size, exp_n):
     history_file = []
     actions_file = []
 
     # Choose number of laps to train on
-    num_laps = 3
+    num_laps = dataset_size
 
-    # TODO: L Choose which maps to train on # All maps: ['mco', 'aut', 'gbr', 'esp']
+    # A list of maps to train on, other maps can be added to the list
     map_list = ['gbr']
     try:
         for map_name in map_list:
+            # Uncomment to reduce size of dataset-pairs
+            # reduce_data_size(map_name, num_laps)
             for lap_num in range(0, num_laps):
                 if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
-                    # TODO: L Make this a function Code to reduce the size of history and actions files so that we can train faster on the beggining of the laps
-                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-                    # cutt_off = int(len(history) * 0.8)
-                    # reduced_history = history[:cutt_off]
-                    # reduced_actions = actions[:cutt_off]
-                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
-                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
-
                     history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
                     actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-
                 else:
                     break
     except FileNotFoundError:
@@ -158,26 +156,15 @@ def main():
     time_start = time.time()
 
     agent = TrainBC(history_file, actions_file)
-    agent.train()
+    agent.train(epochs, batch_size)
     
-    # Experiment 1 # TODO: L make this automatic as well ALSO MAKE IT CREATE THE FOLDER IF FOLDER DOES NOT EXIST
-    agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
-
-    # Experiment 2
-    #agent.save(f'Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
-
-    # Experiment 3
-    #agent.save(f'Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
-
-    # Experiment 4
-    #agent.save(f'Data/Experiment_4/AgentOff_BC_Game_gbr_Cth_8_4_1/AgentOff_BC_Game_gbr_Cth_8_4_1_actor.pth')
+    # Save the model
+    agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1_actor.pth')
 
     time_end = time.time()
     print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
 
 
 if __name__ == "__main__":
-    main()
-
     # Run this function to check the statistics of the history and actions files
-    #check_statistics()
+    check_statistics()
