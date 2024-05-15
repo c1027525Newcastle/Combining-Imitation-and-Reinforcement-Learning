@@ -159,7 +159,13 @@ def training_bc(epochs, batch_size, dataset_size, exp_n):
     agent.train(epochs, batch_size)
     
     # Save the model
-    agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1_actor.pth')
+    dir_path = Path(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1')
+    if os.path.exists(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1'):
+        agent.save(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1_actor.pth')
+    else:
+        dir_path.mkdir(parents=True, exist_ok=True)
+        agent.save(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_{exp_n}_1_actor.pth')
+
 
     time_end = time.time()
     print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")

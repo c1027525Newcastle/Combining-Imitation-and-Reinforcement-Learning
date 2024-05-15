@@ -9,7 +9,7 @@ def create_train_agent(run_dict, state_dim):
     if run_dict.algorithm == "TD3":
         agent = TrainTD3(state_dim, action_dim)
     elif run_dict.algorithm == "BCTD3":
-        agent = TrainBCTD3(state_dim, action_dim)
+        agent = TrainBCTD3(state_dim, action_dim, run_dict.set_n)
     else: raise ValueError(f"Algorithm {run_dict.algorithm} not recognised")
     
     return agent

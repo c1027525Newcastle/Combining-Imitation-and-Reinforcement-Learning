@@ -18,7 +18,7 @@ POLICY_NOISE = 0.2
 
 
 class TrainBCTD3:
-    def __init__(self, state_dim, action_dim):
+    def __init__(self, state_dim, action_dim, exp_n):
         self.act_dim = action_dim
         
         self.actor = DoublePolicyNet(state_dim, action_dim)
@@ -37,12 +37,7 @@ class TrainBCTD3:
         self.replay_buffer = OffPolicyBuffer(state_dim, action_dim)
 
         # Initialize the BC model
-        #Experiment 1
-        self.imitation_model = torch.load('Data/Experiment_1/AgentOff_BC_Game_gbr_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth')
-        #Experiment 2
-        #self.imitation_model = torch.load('Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
-        #Experiment 3
-        #self.imitation_model = torch.load('Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
+        self.imitation_model = torch.load(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_gbr_Cth_8_{exp_n}_1/AgentOff_BC_Game_gbr_Cth_8_{exp_n}_1_actor.pth')
         
         # Choose the percentage of times it affects TD3 during training
         self.imitation_probability = 0.05
