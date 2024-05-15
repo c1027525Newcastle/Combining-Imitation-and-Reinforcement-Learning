@@ -13,7 +13,7 @@ Adjustments have been made
 import numpy as np
 from numba import njit
 from f1tenth_drl.Planners.TrackLine import TrackLine
-from f1tenth_drl.Tuning.DataStateHistory import DataStateHistory
+from f1tenth_drl.DatasetTools.DataStateHistory import DataStateHistory
 
 
 class PurePursuitDataGen:

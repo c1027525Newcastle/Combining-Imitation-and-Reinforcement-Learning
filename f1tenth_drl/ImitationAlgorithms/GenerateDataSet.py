@@ -6,7 +6,7 @@ import numpy as np
 from f1tenth_drl.f1tenth_gym import F110Env
 from f1tenth_drl.f1tenth_gym import RaceCar
 from f1tenth_drl.Utils.utils import *
-from f1tenth_drl.Tuning.PurePursuitDataGen import PurePursuitDataGen
+from f1tenth_drl.DatasetTools.PurePursuitDataGen import PurePursuitDataGen
 
 
 def run_simulation_loop_laps(env, planner, n_laps, n_sim_steps=10):
