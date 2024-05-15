@@ -150,11 +150,6 @@ if __name__ == "__main__":
                     history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
                     actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
 
-                    # Code to check shapes of history and actions
-                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-                    # print(f'History shape: {history.shape}')
-                    # print(f'Actions shape: {actions.shape}')
                 else:
                     break
     except FileNotFoundError:
@@ -165,7 +160,7 @@ if __name__ == "__main__":
     agent = TrainBC(history_file, actions_file)
     agent.train()
     
-    # Experiment 1
+    # Experiment 1 # TODO: L make this automatic as well
     agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
 
     # Experiment 2
