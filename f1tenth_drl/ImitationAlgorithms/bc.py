@@ -125,7 +125,7 @@ def check_statistics():
     print(f"Max: {np.max(history, axis=0)}")
 
 
-if __name__ == "__main__":
+def main():
     history_file = []
     actions_file = []
 
@@ -176,7 +176,8 @@ if __name__ == "__main__":
     print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
 
 
-# Run this function to check the statistics of the history and actions files
-#check_statistics()
-    
-    
+if __name__ == "__main__":
+    main()
+
+    # Run this function to check the statistics of the history and actions files
+    #check_statistics()

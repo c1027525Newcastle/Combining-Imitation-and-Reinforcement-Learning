@@ -22,6 +22,7 @@ def run_simulation_loop_steps(env, planner, steps, steps_per_action=10):
                 planner.done_callback(observation)
                 observation, reward, done, info = env.reset(poses=np.array([[0, 0, 0]]))
                 break
+
         
 def run_simulation_loop_laps(env, planner, n_laps, n_sim_steps=10):
     for lap in range(n_laps):
@@ -36,11 +37,13 @@ def run_simulation_loop_laps(env, planner, n_laps, n_sim_steps=10):
     
         planner.done_callback(observation)
     
+
 def seed_randomness(run_dict):
     random_seed = run_dict.random_seed + 10 * run_dict.n
     np.random.seed(random_seed)
     torch.use_deterministic_algorithms(True)
     torch.manual_seed(random_seed)
+    
     
 def run_training_batch(experiment):
     # run_list = setup_run_list(experiment, new_run=False)
