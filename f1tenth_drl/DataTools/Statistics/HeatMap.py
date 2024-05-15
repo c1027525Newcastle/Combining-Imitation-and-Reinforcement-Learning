@@ -32,7 +32,6 @@ def heatmap(set_n, algorithm):
     # Create the heatmap
     plt.figure(figsize=(10, 8))
     heatmap = sns.heatmap(pivot_table, annot=True, cmap="coolwarm", fmt=".1f", linewidths=.5)
-    plt.title('Mean Velocity by Lap Number and Progress')
     plt.xlabel('Progress of lap(%)')
     plt.ylabel('Lap Number')
     # Add name to colorbar
@@ -43,5 +42,5 @@ def heatmap(set_n, algorithm):
 
 if __name__ == "__main__":
     set_n = 1
-    algorithm = 'BC'
+    algorithm = 'TD3'
     heatmap(set_n, algorithm)

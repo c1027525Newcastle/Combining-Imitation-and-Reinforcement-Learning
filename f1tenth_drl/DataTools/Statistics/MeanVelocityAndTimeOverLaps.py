@@ -65,9 +65,9 @@ def time_over_laps(set_n, algorithm):
     plt.xticks(np.arange(0, 21, 1))
     plt.yticks(np.arange(0, 81, 20))
     plt.title(f'Lap Times over laps for {algorithm} in map {map_name}')
-    #plt.show()
+    plt.show()
 
-    plt.savefig(f'f1tenth_drl/DataTools/Statistics/{set_n}_{algorithm}_time_over_laps.png')
+    #plt.savefig(f'f1tenth_drl/DataTools/Statistics/{set_n}_{algorithm}_time_over_laps.png')
 
     # Close the plot
     plt.close()
@@ -91,15 +91,15 @@ def progress(set_n, algorithm):
     plt.yticks(np.arange(0, 1.1, 0.1))
     plt.title(f'Lap Times over laps for {algorithm} in map {map_name}')
     
-    #plt.show()
+    plt.show()
 
-    plt.savefig(f'f1tenth_drl/DataTools/Statistics/{set_n}_{algorithm}_progress.png')
+    #plt.savefig(f'f1tenth_drl/DataTools/Statistics/{set_n}_{algorithm}_progress.png')
     # Close the plot
     plt.close()
 
 
 if __name__ == "__main__":
-    set_n = [1, 2, 3]
+    set_n = [4]#1, 2, 3]
     algorithms = ['BC', 'TD3', 'BCTD3']
     #mean_velocity_laps(set_n, algorithm)
     #time_over_laps(set_n, algorithm)

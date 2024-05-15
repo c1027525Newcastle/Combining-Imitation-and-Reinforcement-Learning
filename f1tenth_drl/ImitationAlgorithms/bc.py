@@ -8,6 +8,7 @@ from f1tenth_drl.Utils.Networks import DoublePolicyNet
 import time
 import os
 
+EXPLORE_NOISE = 0.1
 
 class TrainBC:
     def __init__(self, history_files, actions_files):
@@ -18,7 +19,7 @@ class TrainBC:
     def reintialize(self):
         self.model = DoublePolicyNet(self.scans.shape[1], self.actions.shape[1])
         self.criterion = nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.0012) #0.005 #0.001
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001) #0.005 #0.001
         
 
     def train(self):
@@ -86,9 +87,15 @@ class TrainBC:
 
 class TestBC:
     def __init__(self):
-        #self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_gbr_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth') # Experiment 1
-        #self.actor = torch.load('Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth') # Experiment 2
-        self.actor = torch.load('Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth') # Experiment 3
+        exp_n = 1 #TODO: L change the name of the BC file to not include agent off and what not
+        # TODO: L ALSO MAYBE DEFINE exp_n in run_experiments.py and pass it as an argument to this class and others in bctd3 for ez
+        self.actor = torch.load(f'Data/Experiment_{exp_n}/AgentOff_BC_Game_gbr_Cth_8_{exp_n}_1/AgentOff_BC_Game_gbr_Cth_8_{exp_n}_1_actor.pth') 
+        # Experiment 1
+        #self.actor = torch.load('Data/Experiment_1/AgentOff_BC_Game_gbr_Cth_8_1_1/AgentOff_BC_Game_gbr_Cth_8_1_1_actor.pth') 
+        # Experiment 2
+        #self.actor = torch.load('Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth') 
+        # Experiment 3
+        #self.actor = torch.load('Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
 
 
     def act(self, state):
@@ -97,75 +104,84 @@ class TestBC:
         
         return action
 
+def check_statistics():
+    # Code to check shapes of history and actions files
+    actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
+    history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
+    print(f'History shape: {history.shape}')
+    print(f'Actions shape: {actions.shape}')
+
+    print("\nActions Statistics:")
+    print(f"Mean: {np.mean(actions, axis=0)}")
+    print(f"Std Deviation: {np.std(actions, axis=0)}")
+    print(f"Min: {np.min(actions, axis=0)}")
+    print(f"Max: {np.max(actions, axis=0)}")
+
+    # Descriptive statistics for history (state features)
+    print("\nHistory (State Features) Statistics:")
+    print(f"Mean: {np.mean(history, axis=0)}")
+    print(f"Std Deviation: {np.std(history, axis=0)}")
+    print(f"Min: {np.min(history, axis=0)}")
+    print(f"Max: {np.max(history, axis=0)}")
+
 
 if __name__ == "__main__":
     history_file = []
     actions_file = []
 
     # Choose number of laps to train on
-    num_laps = 3#3
+    num_laps = 3
 
-    # Choose which maps to train on # All maps: ['mco', 'aut', 'gbr', 'esp']
-    # map_list = ['gbr']
-    # try:
-    #     for map_name in map_list:
-    #         for lap_num in range(0, num_laps):
-    #             if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
-    #                 # Code to reduce the size of history and actions files so that we can train faster on the beggining of the laps
-    #                 # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-    #                 # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-    #                 # cutt_off = int(len(history) * 0.8)
-    #                 # reduced_history = history[:cutt_off]
-    #                 # reduced_actions = actions[:cutt_off]
-    #                 # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
-    #                 # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
+    # TODO: L Choose which maps to train on # All maps: ['mco', 'aut', 'gbr', 'esp']
+    map_list = ['gbr']
+    try:
+        for map_name in map_list:
+            for lap_num in range(0, num_laps):
+                if os.path.exists(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy'):
+                    # TODO: L Make this a function Code to reduce the size of history and actions files so that we can train faster on the beggining of the laps
+                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+                    # cutt_off = int(len(history) * 0.8)
+                    # reduced_history = history[:cutt_off]
+                    # reduced_actions = actions[:cutt_off]
+                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy', reduced_history)
+                    # np.save(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy' ,reduced_actions)
 
-    #                 history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-    #                 actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+                    history_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+                    actions_file.append(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
 
-    #                 # Code to check shapes of history and actions
-    #                 # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
-    #                 # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
-    #                 # print(f'History shape: {history.shape}')
-    #                 # print(f'Actions shape: {actions.shape}')
-    #             else:
-    #                 break
-    # except FileNotFoundError:
-    #     print('Files for database not found')
+                    # Code to check shapes of history and actions
+                    # actions = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_actions.npy')
+                    # history = np.load(f'Data/GenerateDataSet_1/RawData/PurePursuit_{map_name}_DataGen_1_Lap_{lap_num}_history.npy')
+                    # print(f'History shape: {history.shape}')
+                    # print(f'Actions shape: {actions.shape}')
+                else:
+                    break
+    except FileNotFoundError:
+        print('Files for database not found') #TODO: L move this inside the initializer
 
-    # time_start = time.time()
+    time_start = time.time()
 
-    # agent = TrainBC(history_file, actions_file)
-    # agent.train()
+    agent = TrainBC(history_file, actions_file)
+    agent.train()
     
-    # # Experiment 1
-    # #agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
+    # Experiment 1
+    agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
 
-    # # Experiment 2
-    # #agent.save(f'Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
+    # Experiment 2
+    #agent.save(f'Data/Experiment_2/AgentOff_BC_Game_gbr_Cth_8_2_1/AgentOff_BC_Game_gbr_Cth_8_2_1_actor.pth')
 
-    # # Experiment 3
-    # #agent.save(f'Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
+    # Experiment 3
+    #agent.save(f'Data/Experiment_3/AgentOff_BC_Game_gbr_Cth_8_3_1/AgentOff_BC_Game_gbr_Cth_8_3_1_actor.pth')
 
-    # time_end = time.time()
-    # print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
+    # Experiment 4
+    #agent.save(f'Data/Experiment_4/AgentOff_BC_Game_gbr_Cth_8_4_1/AgentOff_BC_Game_gbr_Cth_8_4_1_actor.pth')
 
-    # Code to check shapes of history and actions files
-    # actions = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_actions.npy')
-    # history = np.load('Data/GenerateDataSet_1/RawData/PurePursuit_gbr_DataGen_1_Lap_0_history.npy')
-    # print(f'History shape: {history.shape}')
-    # print(f'Actions shape: {actions.shape}')
+    time_end = time.time()
+    print(f"\nTraining took {((time_end - time_start)/60):.2f} minutes")
 
-    # print("\nActions Statistics:")
-    # print(f"Mean: {np.mean(actions, axis=0)}")
-    # print(f"Std Deviation: {np.std(actions, axis=0)}")
-    # print(f"Min: {np.min(actions, axis=0)}")
-    # print(f"Max: {np.max(actions, axis=0)}")
 
-    # # Descriptive statistics for history (state features)
-    # print("\nHistory (State Features) Statistics:")
-    # print(f"Mean: {np.mean(history, axis=0)}")
-    # print(f"Std Deviation: {np.std(history, axis=0)}")
-    # print(f"Min: {np.min(history, axis=0)}")
-    # print(f"Max: {np.max(history, axis=0)}")
+# Run this function to check the statistics of the history and actions files
+#check_statistics()
+    
     

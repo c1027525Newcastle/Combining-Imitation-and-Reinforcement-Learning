@@ -14,7 +14,7 @@ from matplotlib.ticker import MultipleLocator
 import pandas as pd
 
 SAVE_PDF = False
-# SAVE_PDF = True
+# SAVE_PDF = True # TODO: L why is this here
 
 
 def ensure_path_exists(folder):
@@ -82,10 +82,8 @@ def create_main_agent_df(agent_path, test_laps=20):
 
 def main():
     p = "Data/"
-    
-    # set_number = 4
-    # path = p + f"FinalExperiment_{set_number}/"    
-    set_number = 1
+      
+    set_number = 4
     path = p + f"Experiment_{set_number}/"
 
     vehicle_folders = glob.glob(f"{path}*/")

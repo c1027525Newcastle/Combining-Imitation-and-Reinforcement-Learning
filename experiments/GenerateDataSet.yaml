@@ -10,7 +10,7 @@ max_speed: 8
 set_n: 1
 random_seed: 100 #0
 n_scans: 2
-n_test_laps: 2500
+n_test_laps: 50
 
 id_name: "DataGen"
 
