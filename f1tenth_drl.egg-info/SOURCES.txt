@@ -6,8 +6,6 @@ f1tenth_drl.egg-info/PKG-INFO
 f1tenth_drl.egg-info/SOURCES.txt
 f1tenth_drl.egg-info/dependency_links.txt
 f1tenth_drl.egg-info/top_level.txt
-f1tenth_drl/DataTools/ChangeRepeatNumber.py
-f1tenth_drl/DataTools/GenerateTrajectoryAnalysis.py
 f1tenth_drl/DataTools/MapData.py
 f1tenth_drl/DataTools/__init__.py
 f1tenth_drl/DataTools/plotting_utils.py
