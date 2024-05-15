@@ -10,7 +10,7 @@ max_speed: 8
 n_waypoints: 10
 num_beams: 20
 
-training_steps: 10000 # Change training step to 60,000
+training_steps: 60000 # Change training step to 60,000
 
 n_test_laps: 20 
 

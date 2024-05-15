@@ -13,3 +13,17 @@ TODO:
 
 -> added map_reformat.py
 -> added generatedataset.py rename more things
+
+
+# Combining Imitation and Reinforcement Learning to Surpass Human Performance
+This repository was used for the work in my dissertation project for Newcastle University.
+
+Some files in this code were created using the code from the paper Evans et al., "Comparing deep reinforcement learning architectures for autonomous racing" that is available on GitHub [https://github.com/BDEvan5/f1tenth_drl.git] and from the official F1TENTH repository f1tenth_gym [https://github.com/f1tenth/f1tenth_gym.git].
+
+
+# Usage
+
+
+## Installation
+
+## Generate Result Data

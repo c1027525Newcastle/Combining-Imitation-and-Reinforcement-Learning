@@ -1,27 +1,19 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1' 
-DESCRIPTION = 'My F1Tenth drl agents'
-LONG_DESCRIPTION = 'DRL based f110 agents for autonomous racing'
 
 # Setting up
 setup(
-       # the name must match the folder name 'verysimplemodule'
-        name="f1tenth_drl", 
-        version=VERSION,
-        author="Benjamin Evans",
-        author_email="<bdevans@sun.ac.za>",
-        description=DESCRIPTION,
-        long_description=LONG_DESCRIPTION,
+        name="f1tenth", 
+        version='0.0.1',
+        author="Luca Albinescu",
+        author_email="<luca.albinescu@gmail.com>",
+        description="Combining Imitation and Reinforcement Learning to Surpass Human Performance",
         packages=find_packages(),
-        install_requires=[], # add any additional packages that 
-        # needs to be installed along with your package. Eg: 'caer'
         
         keywords=['python', 'autonomous racing'],
         classifiers= [
-            "Development Status :: 3 - Alpha",
-            "Intended Audience :: Education",
+            "Purpose :: Dissertation",
             "Programming Language :: Python :: 3",
-            "Operating System :: Linux",
+            "Operating System :: MacOS",
         ]
 )
