@@ -1,5 +1,5 @@
 import yaml
-from argparse import Namespace
+from argparse import Namespace #TODO: L remove this most likely
 import os 
 import numpy as np
 

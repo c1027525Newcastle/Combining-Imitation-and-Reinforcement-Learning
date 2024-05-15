@@ -41,6 +41,7 @@ def heatmap(set_n, algorithm):
 
 
 if __name__ == "__main__":
-    set_n = 1
+    # Experiment number and algorithm
+    exp_n = 1
     algorithm = 'TD3'
-    heatmap(set_n, algorithm)
+    heatmap(exp_n, algorithm)

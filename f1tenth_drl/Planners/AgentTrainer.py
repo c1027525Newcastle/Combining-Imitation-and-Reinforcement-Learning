@@ -66,7 +66,6 @@ class AgentTrainer:
         progress = self.std_track.calculate_progress_percent([s_prime['poses_x'][0], s_prime['poses_y'][0]]) * 100
         self.max_lap_progress = max(self.max_lap_progress, progress)
         
-        # print(self.t_his.reward_list)
         self.t_his.lap_done(reward, self.max_lap_progress, False)
         print(f"Episode: {self.t_his.ptr}, Step: {self.t_his.t_counter}, Lap p: {self.max_lap_progress:.1f}%, Reward: {self.t_his.rewards[self.t_his.ptr-1]:.2f}")
 

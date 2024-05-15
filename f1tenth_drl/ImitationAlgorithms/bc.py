@@ -160,7 +160,7 @@ if __name__ == "__main__":
     agent = TrainBC(history_file, actions_file)
     agent.train()
     
-    # Experiment 1 # TODO: L make this automatic as well
+    # Experiment 1 # TODO: L make this automatic as well ALSO MAKE IT CREATE THE FOLDER IF FOLDER DOES NOT EXIST
     agent.save(f'Data/Experiment_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1/AgentOff_BC_Game_{map_list[0]}_Cth_8_1_1_actor.pth')
 
     # Experiment 2

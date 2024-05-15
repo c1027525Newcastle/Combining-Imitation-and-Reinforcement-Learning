@@ -1,16 +1,9 @@
-from matplotlib import pyplot as plt
 import numpy as np
 import glob
 import os
-
-from PIL import Image
 import glob
-
-from f1tenth_drl.DataTools.MapData import MapData
 from f1tenth_drl.Planners.TrackLine import TrackLine
 from f1tenth_drl.Utils.utils import *
-from matplotlib.ticker import MultipleLocator
-
 import pandas as pd
 
 SAVE_PDF = False
@@ -61,12 +54,12 @@ def create_main_agent_df(agent_path, test_laps=20):
             avg_velocity = np.mean(states[:, 3])
 
             progress = std_track.calculate_progress_percent(states[-1, :2])
-            if progress < 0.02 or progress > 0.98: # due to occasional calculation errors
+            if progress < 0.02 or progress > 0.98:
                 if total_distance < std_track.total_s * 0.8:
                     print(f"Turned around.....")
                     progress = total_distance / std_track.total_s
                     continue
-                progress = 1 # it is finished
+                progress = 1
 
             total_distance = "{:.2f}".format(total_distance)
             progress = "{:.2f}".format(progress)
