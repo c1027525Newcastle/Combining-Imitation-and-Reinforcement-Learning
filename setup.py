@@ -1,7 +1,5 @@
 from setuptools import setup, find_packages
 
-
-# Setting up
 setup(
         name="f1tenth", 
         version='0.0.1',

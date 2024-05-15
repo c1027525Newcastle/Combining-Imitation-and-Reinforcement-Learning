@@ -1,10 +1,10 @@
 import numpy as np
+import torch
 
 from f1tenth.f1tenth_gym import F110Env
 from f1tenth.Planners.AgentTrainer import AgentTrainer
 from f1tenth.Planners.AgentTester import AgentTester
 from f1tenth.Utils.utils import *
-import torch
 
 
 def run_simulation_loop_steps(env, planner, steps, steps_per_action=10):

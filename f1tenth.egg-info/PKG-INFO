@@ -5,6 +5,6 @@ Summary: Combining Imitation and Reinforcement Learning to Surpass Human Perform
 Author: Luca Albinescu
 Author-email: <luca.albinescu@gmail.com>
 Keywords: python,autonomous racing
-Classifier: Intended Audience :: Dissertation
+Classifier: Purpose :: Dissertation
 Classifier: Programming Language :: Python :: 3
 Classifier: Operating System :: MacOS
