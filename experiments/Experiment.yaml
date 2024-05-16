@@ -1,4 +1,3 @@
-
 planner_type: "AgentOff"
 
 n_repeats: 2
@@ -10,14 +9,16 @@ max_speed: 8
 n_waypoints: 10
 num_beams: 20
 
-training_steps: 60000 # Change training step to 60,000
+training_steps: 60000 # Number of training steps for TD3 and BCTD3
 
-n_test_laps: 20 
+n_test_laps: 20 # Number of laps all algorithms will be tested on at the end of training
 
-algorithm: "TD3" # Algorithm used
+algorithm: "TD3" # Algorithm used; Uncomment which algorithm you want to use
+#algorithm: "BC"
+#algorithm: "BCTD3"
 
 # For Imitation Learning algorithm
-epoch: 1000 # Number of epochs
+epoch: 30000 # Number of epochs
 batch_size: 64 # Batch size
 dataset_size: 3 # Number of dataset-pairs used
 

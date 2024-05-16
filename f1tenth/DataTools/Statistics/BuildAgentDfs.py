@@ -73,8 +73,8 @@ def create_main_agent_df(agent_path, test_laps=20):
 def main():
     p = "Data/"
       
-    set_number = 4
-    path = p + f"Experiment_{set_number}/"
+    exp_n = 1
+    path = p + f"Experiment_{exp_n}/"
 
     vehicle_folders = glob.glob(f"{path}*/")
     print(f"{len(vehicle_folders)} folders found")

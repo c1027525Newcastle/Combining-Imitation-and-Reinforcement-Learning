@@ -68,9 +68,8 @@ def time_over_laps(set_n, algorithm):
     plt.show()
 
     #plt.savefig(f'f1tenth_drl/DataTools/Statistics/{set_n}_{algorithm}_time_over_laps.png')
-
     # Close the plot
-    plt.close()
+    #plt.close()
 
 
 def progress(set_n, algorithm):
@@ -95,16 +94,17 @@ def progress(set_n, algorithm):
 
     #plt.savefig(f'f1tenth_drl/DataTools/Statistics/{set_n}_{algorithm}_progress.png')
     # Close the plot
-    plt.close()
+    #plt.close()
 
 
 if __name__ == "__main__":
-    set_n = [4]#1, 2, 3]
+    exp_n = [1]
     algorithms = ['BC', 'TD3', 'BCTD3']
-    #mean_velocity_laps(set_n, algorithm)
-    #time_over_laps(set_n, algorithm)
-    #progress(set_n, algorithm)
+    mean_velocity_laps(exp_n[0], algorithms[0])
+    #time_over_laps(exp_n[0], algorithms[0])
+    #progress(exp_n[0], algorithms[0])
 
+    # Used to mass save each plot when the plt.savefig() is uncommented in each function
     # for algo in algorithms:
     #     for n in set_n:
     #         progress(n, algo)

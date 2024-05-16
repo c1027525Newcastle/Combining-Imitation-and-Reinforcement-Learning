@@ -65,10 +65,7 @@ class AnalyseTestLapData:
 
         ensure_path_exists("/".join(self.path.split("/")[:-2])+  f"/Imgs/")
         self.testing_velocity_path = "/".join(self.path.split("/")[:-2]) + f"/Imgs/FullTrajectories{self.map_name.upper()}/"
-        self.clipped_trajectories_path = "/".join(self.path.split("/")[:-2]) + f"/Imgs/ClippedTrajectories{self.map_name.upper()}/"
-        self.slip_distributions_path = "/".join(self.path.split("/")[:-2]) + f"/Imgs/SlipDistributions{self.map_name.upper()}/"
         ensure_path_exists(self.testing_velocity_path)
-        ensure_path_exists(self.clipped_trajectories_path)
 
         for self.lap_n in range(9):
             if not self.load_lap_data(): break # no more laps
