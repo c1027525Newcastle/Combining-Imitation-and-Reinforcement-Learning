@@ -19,8 +19,12 @@ python3.9 -m venv venv
 source venv/bin/activate 
 
 - Install required packages:
+```
 pip install -r requirements.txt
+```
+```
 pip install -e .
+```
 
 ## Train and Test the RL, IL or combined BCTD3 algorithms
 - The main file that states what algorithm and what its hyperparameters are, is `experiments/Experiment.yaml`.
