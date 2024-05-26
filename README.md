@@ -15,8 +15,13 @@ This software was developed and run on an Apple MacBook Pro 14”, 2021 model, w
 After cloning the git repository on the machine the following commands need to be run in the terminal:
 
 - Create and activate virtual environment:
+```
 python3.9 -m venv venv 
+```
+
+```
 source venv/bin/activate 
+```
 
 - Install required packages:
 ```
